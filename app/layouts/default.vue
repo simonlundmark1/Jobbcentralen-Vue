@@ -104,7 +104,9 @@ const mobileMenuOpen = ref(false)
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: 2px;
+  margin-right: 2rem;
+  margin-top: 1rem;
 }
 
 .login-link {
@@ -134,11 +136,12 @@ const mobileMenuOpen = ref(false)
   font-size: 13px;
   color: white;
   cursor: pointer;
+  margin-right: 1rem;
 }
 
 .arrow-icon {
-  width: 16px;
-  height: 16px;
+  width: 32px;
+  height: 32px;
   filter: brightness(0) invert(1);
 }
 

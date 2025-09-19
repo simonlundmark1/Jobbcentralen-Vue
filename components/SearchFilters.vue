@@ -42,48 +42,126 @@
       <!-- Filters -->
       <div class="filters-container">
         <div class="filter-group">
-          <label for="occupation-field" class="filter-label">Yrkesområde</label>
-          <select
-            id="occupation-field"
-            class="filter-select"
-            v-model="occupationField"
-            @change="handleFilterChange('occupationField', occupationField)"
-          >
-            <option value="">Alla områden</option>
-            <option v-for="(field, index) in uniqueOccupationFields" :key="`occupation-${index}`" :value="field">
-              {{ field }}
-            </option>
-          </select>
+          <label for="occupation-field" class="filter-label">Yrke</label>
+          <div class="combo-box" @click.stop>
+            <button
+              type="button"
+              class="combo-trigger"
+              @click.stop="toggleOccupationDropdown"
+              tabindex="-1"
+            >
+              <input
+                id="occupation-field"
+                type="text"
+                class="combo-input"
+                v-model="occupationField"
+                @input="updateOccupationField"
+                placeholder="Välj eller skriv yrke..."
+                autocomplete="off"
+              />
+              <svg v-if="!occupationField" class="combo-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+              <button v-if="occupationField" @click.stop="clearOccupationField" class="combo-clear" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 6L6 18M6 6l12 12"></path>
+                </svg>
+              </button>
+            </button>
+            <div v-if="showOccupationDropdown && filteredOccupationFields.length > 0" class="combo-dropdown">
+              <button
+                v-for="(field, index) in filteredOccupationFields"
+                :key="`occupation-${index}`"
+                type="button"
+                class="combo-option"
+                @mousedown.prevent="selectOccupationField(field)"
+              >
+                {{ field }}
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="filter-group">
           <label for="municipality" class="filter-label">Plats</label>
-          <select
-            id="municipality"
-            class="filter-select"
-            v-model="municipality"
-            @change="handleFilterChange('municipality', municipality)"
-          >
-            <option value="">Alla platser</option>
-            <option v-for="(city, index) in uniqueMunicipalities" :key="`municipality-${index}`" :value="city">
-              {{ city }}
-            </option>
-          </select>
+          <div class="combo-box" @click.stop>
+            <button
+              type="button"
+              class="combo-trigger"
+              @click.stop="toggleMunicipalityDropdown"
+              tabindex="-1"
+            >
+              <input
+                id="municipality"
+                type="text"
+                class="combo-input"
+                v-model="municipality"
+                @input="updateMunicipality"
+                placeholder="Välj eller skriv plats..."
+                autocomplete="off"
+              />
+              <svg v-if="!municipality" class="combo-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+              <button v-if="municipality" @click.stop="clearMunicipality" class="combo-clear" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 6L6 18M6 6l12 12"></path>
+                </svg>
+              </button>
+            </button>
+            <div v-if="showMunicipalityDropdown && filteredMunicipalities.length > 0" class="combo-dropdown">
+              <button
+                v-for="(city, index) in filteredMunicipalities"
+                :key="`municipality-${index}`"
+                type="button"
+                class="combo-option"
+                @mousedown.prevent="selectMunicipality(city)"
+              >
+                {{ city }}
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="filter-group">
           <label for="work-extent" class="filter-label">Omfattning</label>
-          <select
-            id="work-extent"
-            class="filter-select"
-            v-model="workTimeExtent"
-            @change="handleFilterChange('workTimeExtent', workTimeExtent)"
-          >
-            <option value="">Alla typer</option>
-            <option v-for="(extent, index) in uniqueWorkTimeExtents" :key="`extent-${index}`" :value="extent">
-              {{ extent }}
-            </option>
-          </select>
+          <div class="combo-box" @click.stop>
+            <button
+              type="button"
+              class="combo-trigger"
+              @click.stop="toggleWorkTimeDropdown"
+              tabindex="-1"
+            >
+              <input
+                id="work-extent"
+                type="text"
+                class="combo-input"
+                v-model="workTimeExtent"
+                @input="updateWorkTimeExtent"
+                placeholder="Välj eller skriv omfattning..."
+                autocomplete="off"
+              />
+              <svg v-if="!workTimeExtent" class="combo-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+              <button v-if="workTimeExtent" @click.stop="clearWorkTimeExtent" class="combo-clear" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 6L6 18M6 6l12 12"></path>
+                </svg>
+              </button>
+            </button>
+            <div v-if="showWorkTimeDropdown && filteredWorkTimeExtents.length > 0" class="combo-dropdown">
+              <button
+                v-for="(extent, index) in filteredWorkTimeExtents"
+                :key="`extent-${index}`"
+                type="button"
+                class="combo-option"
+                @mousedown.prevent="selectWorkTimeExtent(extent)"
+              >
+                {{ extent }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -116,7 +194,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 interface Props {
   jobs?: any[]
@@ -138,22 +216,178 @@ const occupationField = ref('')
 const municipality = ref('')
 const workTimeExtent = ref('')
 
-// Computed properties for unique values (mock data for now)
+// Dropdown state
+const showMunicipalityDropdown = ref(false)
+const showOccupationDropdown = ref(false)
+const showWorkTimeDropdown = ref(false)
+
+// Filter options from API
+const filterOptions = ref({
+  occupationFields: [] as string[],
+  municipalities: [] as string[],
+  workTimeExtents: [] as string[],
+  employmentTypes: [] as string[]
+})
+
+// Global click handler reference
+const globalClickHandler = () => {
+  showOccupationDropdown.value = false
+  showMunicipalityDropdown.value = false
+  showWorkTimeDropdown.value = false
+}
+
+// Fetch filter options on mount
+onMounted(async () => {
+  try {
+    const response = await $fetch('/api/jobs/filter-options')
+    if (response.success) {
+      filterOptions.value = response.data
+    }
+  } catch (error) {
+    console.error('Error fetching filter options:', error)
+  }
+  
+  // Add global click handler to close dropdowns
+  document.addEventListener('click', globalClickHandler)
+})
+
+// Cleanup on unmount
+onUnmounted(() => {
+  document.removeEventListener('click', globalClickHandler)
+})
+
+// Computed properties for filter options
 const uniqueOccupationFields = computed(() => {
-  return ['IT/Teknik', 'Ekonomi/Administration', 'Vård/Omsorg', 'Utbildning', 'Försäljning']
+  return filterOptions.value.occupationFields
 })
 
 const uniqueMunicipalities = computed(() => {
-  return ['Stockholm', 'Göteborg', 'Malmö', 'Uppsala', 'Linköping']
+  return filterOptions.value.municipalities
 })
 
 const uniqueWorkTimeExtents = computed(() => {
-  return ['Heltid', 'Deltid', 'Vikariat', 'Projektanställning']
+  return filterOptions.value.workTimeExtents
+})
+
+// Smart filtered options for searchable dropdowns
+const filteredOccupationFields = computed(() => {
+  if (!occupationField.value) {
+    return filterOptions.value.occupationFields.slice(0, 10) // Show top 10 when empty
+  }
+  
+  const query = occupationField.value.toLowerCase()
+  const fields = filterOptions.value.occupationFields
+  
+  // Prioritize: exact matches, starts with, then contains
+  const exactMatches = fields.filter(field => field.toLowerCase() === query)
+  const startsWith = fields.filter(field => 
+    field.toLowerCase().startsWith(query) && !exactMatches.includes(field)
+  )
+  const contains = fields.filter(field => 
+    field.toLowerCase().includes(query) && 
+    !exactMatches.includes(field) && 
+    !startsWith.includes(field)
+  )
+  
+  return [...exactMatches, ...startsWith, ...contains].slice(0, 10)
+})
+
+const filteredMunicipalities = computed(() => {
+  if (!municipality.value) {
+    return filterOptions.value.municipalities.slice(0, 10) // Show top 10 when empty
+  }
+  
+  const query = municipality.value.toLowerCase()
+  const cities = filterOptions.value.municipalities
+  
+  // Prioritize: exact matches, starts with, then contains
+  const exactMatches = cities.filter(city => city.toLowerCase() === query)
+  const startsWith = cities.filter(city => 
+    city.toLowerCase().startsWith(query) && !exactMatches.includes(city)
+  )
+  const contains = cities.filter(city => 
+    city.toLowerCase().includes(query) && 
+    !exactMatches.includes(city) && 
+    !startsWith.includes(city)
+  )
+  
+  return [...exactMatches, ...startsWith, ...contains].slice(0, 10)
+})
+
+const filteredWorkTimeExtents = computed(() => {
+  if (!workTimeExtent.value) {
+    return filterOptions.value.workTimeExtents.slice(0, 10) // Show top 10 when empty
+  }
+  
+  const query = workTimeExtent.value.toLowerCase()
+  const extents = filterOptions.value.workTimeExtents
+  
+  // Prioritize: exact matches, starts with, then contains
+  const exactMatches = extents.filter(extent => extent.toLowerCase() === query)
+  const startsWith = extents.filter(extent => 
+    extent.toLowerCase().startsWith(query) && !exactMatches.includes(extent)
+  )
+  const contains = extents.filter(extent => 
+    extent.toLowerCase().includes(query) && 
+    !exactMatches.includes(extent) && 
+    !startsWith.includes(extent)
+  )
+  
+  return [...exactMatches, ...startsWith, ...contains].slice(0, 10)
 })
 
 const hasActiveFilters = computed(() => {
   return occupationField.value || municipality.value || workTimeExtent.value
 })
+
+// Dropdown functions
+const toggleOccupationDropdown = () => {
+  showOccupationDropdown.value = !showOccupationDropdown.value
+}
+
+const hideOccupationDropdown = () => {
+  setTimeout(() => {
+    showOccupationDropdown.value = false
+  }, 150) // Delay to allow click event
+}
+
+const selectOccupationField = (field: string) => {
+  occupationField.value = field
+  showOccupationDropdown.value = false
+  handleFilterChange('occupationField', field)
+}
+
+const toggleMunicipalityDropdown = () => {
+  showMunicipalityDropdown.value = !showMunicipalityDropdown.value
+}
+
+const hideMunicipalityDropdown = () => {
+  setTimeout(() => {
+    showMunicipalityDropdown.value = false
+  }, 150) // Delay to allow click event
+}
+
+const selectMunicipality = (city: string) => {
+  municipality.value = city
+  showMunicipalityDropdown.value = false
+  handleFilterChange('municipality', city)
+}
+
+const toggleWorkTimeDropdown = () => {
+  showWorkTimeDropdown.value = !showWorkTimeDropdown.value
+}
+
+const hideWorkTimeDropdown = () => {
+  setTimeout(() => {
+    showWorkTimeDropdown.value = false
+  }, 150) // Delay to allow click event
+}
+
+const selectWorkTimeExtent = (extent: string) => {
+  workTimeExtent.value = extent
+  showWorkTimeDropdown.value = false
+  // Don't emit filter change immediately
+}
 
 const handleEnterSearch = (e: KeyboardEvent) => {
   if (e.key === 'Enter') {
@@ -171,7 +405,43 @@ const clearSearch = () => {
 }
 
 const performSearch = () => {
+  // Emit search with all current filter values
   emit('search', searchTerm.value)
+  if (occupationField.value) emit('filter-change', 'occupationField', occupationField.value)
+  if (municipality.value) emit('filter-change', 'municipality', municipality.value)
+  if (workTimeExtent.value) emit('filter-change', 'workTimeExtent', workTimeExtent.value)
+}
+
+// Update functions that don't trigger immediate filtering
+const updateOccupationField = () => {
+  // Just update the dropdown, don't emit filter change
+}
+
+const updateMunicipality = () => {
+  // Just update the dropdown, don't emit filter change
+}
+
+const updateWorkTimeExtent = () => {
+  // Just update the dropdown, don't emit filter change
+}
+
+// Clear functions for X buttons
+const clearOccupationField = () => {
+  occupationField.value = ''
+  showOccupationDropdown.value = false
+  // Don't emit filter change immediately
+}
+
+const clearMunicipality = () => {
+  municipality.value = ''
+  showMunicipalityDropdown.value = false
+  // Don't emit filter change immediately
+}
+
+const clearWorkTimeExtent = () => {
+  workTimeExtent.value = ''
+  showWorkTimeDropdown.value = false
+  // Don't emit filter change immediately
 }
 
 const clearFilter = (type: string) => {
@@ -192,16 +462,11 @@ const clearFilter = (type: string) => {
 
 <style scoped>
 .search-section {
-  height: 185px;
-  width: 100%;
+  background-color: #E4E9E3;
   border: 1px solid black;
-  border-top: 1px solid black;
-  box-shadow: inset 0 6px 0 0 #B7CAB4;
-  background-color: #D3E0D1;
-  margin: 0;
-  position: relative;
+  margin: 0 0 6px 0;
+  padding: 6px;
   box-sizing: border-box;
-  margin-bottom: 6px;
 }
 
 .search-container {
@@ -229,8 +494,11 @@ const clearFilter = (type: string) => {
 
 .search-input-wrapper {
   display: flex;
+  align-items: center;
   width: 340px;
   height: 30px;
+  background-color: white;
+  box-sizing: border-box;
 }
 
 .search-icon {
@@ -238,33 +506,191 @@ const clearFilter = (type: string) => {
 }
 
 .search-input {
-  width: 100%;
-  height: 100%;
+  flex: 1;
   border: 1px solid black;
-  background-color: white;
-  margin-right: 6px;
-  padding: 0 8px;
+  outline: none;
+  padding: 8px 12px;
   font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  background-color: white;
+  line-height: 1.2;
+  height: 28px;
+  box-sizing: border-box;
 }
 
 .clear-search {
   display: none;
 }
 
+.filter-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid black;
+  border-radius: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-select:hover {
+  background-color: #f0f0f0;
+}
+
+.filter-select:focus {
+  outline: none;
+  background-color: #f8f8f8;
+}
+
+/* Combo Box Styling */
+.combo-box {
+  position: relative;
+  width: 100%;
+}
+
+.combo-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 30px;
+  padding: 0;
+  border: 1px solid black;
+  border-radius: 0;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+}
+
+.combo-trigger:focus {
+  outline: none;
+}
+
+.combo-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 8px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: inherit;
+  line-height: 1.2;
+}
+
+.combo-input::placeholder {
+  color: #666;
+}
+
+.combo-chevron {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  opacity: 0.5;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.combo-clear {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-right: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.combo-clear:hover {
+  background-color: #f0f0f0;
+}
+
+.combo-clear svg {
+  width: 14px;
+  height: 14px;
+  opacity: 0.7;
+}
+
+.combo-clear:hover svg {
+  opacity: 1;
+}
+
+.combo-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid black;
+  border-top: none;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: dropdownFadeIn 0.2s ease-out forwards;
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.combo-option {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background-color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.combo-option:hover {
+  background-color: #f0f0f0;
+}
+
+.combo-option:active {
+  background-color: #e0e0e0;
+}
+
 .search-button {
   height: 30px;
   padding: 0 16px;
-  border: 1px solid black;
   background-color: #1D6453;
   color: white;
-  font-family: 'Inter', sans-serif;
-  font-weight: bold;
-  font-size: 14px;
-  cursor: pointer;
+  border: 1px solid black;
   border-radius: 0;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
 }
 
-/* Filters */
+.search-button:hover {
+  background-color: #155242;
+}
+
 .filters-container {
   display: flex;
   margin-top: 16px;
@@ -281,8 +707,9 @@ const clearFilter = (type: string) => {
 
 .search-controls {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 6px;
+  height: 30px;
 }
 
 .filter-label {
@@ -294,6 +721,13 @@ const clearFilter = (type: string) => {
 }
 
 .filter-select {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  border: 1px solid black;
+  background-color: white;
+  position: relative;
+  min-height: 36px;
   width: 106px;
   height: 30px;
   border: 1px solid black;
@@ -309,6 +743,17 @@ const clearFilter = (type: string) => {
 /* Active Filters - Hidden on desktop */
 .active-filters {
   display: none;
+}
+
+/* Desktop styles - ensure they override mobile */
+@media (min-width: 769px) {
+  .search-input-wrapper {
+    border: 1px solid black !important;
+    border-top: 1px solid black !important;
+    border-bottom: 1px solid black !important;
+    height: 30px !important;
+    width: 340px !important;
+  }
 }
 
 /* Mobile-only responsive design */

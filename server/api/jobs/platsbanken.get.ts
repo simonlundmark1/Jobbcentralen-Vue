@@ -35,10 +35,17 @@ export default defineEventHandler(async (event) => {
         : [query.occupation as string]
     }
     
-    if (query.employment_type) {
-      searchParams.employment_type = Array.isArray(query.employment_type)
-        ? query.employment_type as string[]
-        : [query.employment_type as string]
+    if (query['occupation-field']) {
+      searchParams.occupation_field = Array.isArray(query['occupation-field'])
+        ? query['occupation-field'] as string[]
+        : [query['occupation-field'] as string]
+    }
+    
+    if (query.employment_type || query['employment-type']) {
+      const empType = query.employment_type || query['employment-type']
+      searchParams.employment_type = Array.isArray(empType)
+        ? empType as string[]
+        : [empType as string]
     }
     
     if (query.experience_required === 'true') {

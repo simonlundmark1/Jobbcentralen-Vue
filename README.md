@@ -23,47 +23,36 @@ A modern Swedish job search application that fetches jobs from Platsbanken API. 
 - **Pinia** - State management via `@pinia/nuxt`
 - **VueUse** - Collection of Vue composition utilities
 
-### Backend & Services
-- **Platsbanken API** - Sweden's official job portal API integration
-- **Nitro** - Nuxt's server engine for API routes and data fetching
+### 🎨 Modern UI/UX
+- Clean, professional design
+- Toast notifications for user feedback
+- Mobile-first responsive design
+- Accessibility-focused components
 
-### Additional Libraries
-- **@nuxtjs/tailwindcss** - Tailwind CSS integration
-- **TypeScript** - Full type safety for Platsbanken API responses
+## Tech Stack
 
-## 🚀 Quick Start
+- **Framework**: Nuxt 3
+- **Frontend**: Vue 3 + TypeScript
+- **Styling**: Tailwind CSS + Custom CSS
+- **AI Integration**: OpenAI API
+- **State Management**: Pinia
+- **Form Validation**: VeeValidate + Zod
+- **Icons**: Heroicons
+- **Font**: Inter
+
+## Setup
 
 ### Prerequisites
+- Node.js 18+ 
+- pnpm (recommended)
+- OpenAI API key
 
-- Node.js 20+
-- pnpm (recommended) or npm
-- Git
+### Installation
 
-### 1. Clone and Install
-
+1. Clone the repository:
 ```bash
-pnpm install
-```
-
-### 2. Development Server
-
-```bash
-pnpm dev
-```
-
-Visit `http://localhost:3000` to see your application running.
-
-The application will start fetching jobs from Platsbanken API automatically. No additional configuration needed!
-
-## 🔧 API Integration
-
-The application integrates with the official Platsbanken API (JobTech Dev):
-
-### Available Endpoints
-
-- **Job Search**: `GET /api/jobs/platsbanken` - Search and filter jobs
-- **Filter Concepts**: `GET /api/jobs/concepts` - Get locations and professions for filters
-
+git clone <repository-url>
+cd jobsite-vue
 ### Platsbanken API Features
 
 - Free text search across job titles, companies, and descriptions

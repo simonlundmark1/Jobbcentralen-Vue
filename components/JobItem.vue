@@ -1,55 +1,271 @@
 <template>
-  <NuxtLink :to="`/job/${job.id}`" class="job-link">
-    <div class="job-container" :style="jobStyle">
-      <div class="inner-div"></div>
-      <div class="top-left-box" :style="topLeftBoxStyle">
-        <div class="inner-top-left-bar" :style="innerTopLeftBarStyle"></div>
-        <div class="inner-text">
-          <p class="job-title">{{ job.headline }}</p>
-          <p class="location-text">{{ displayLocation }}</p>
+  <div class="job-container" :class="{ 'expanded': isExpanded, 'contracting': isContracting }" :style="jobStyle">
+    <div class="inner-div"></div>
+    <div class="top-left-box" :style="topLeftBoxStyle">
+      <div class="inner-top-left-bar" :style="innerTopLeftBarStyle"></div>
+      <div class="inner-text">
+        <h3 class="job-title">{{ job.title }}</h3>
+        <p class="location-text">{{ job.location }}</p>
+      </div>
+    </div>
+    <p class="employer-text">{{ job.company }}</p>
+    <p class="deadline-text">Sista ansökningsdatum: {{ formatDate(job.applicationDeadline) }}</p>
+    
+    <!-- Action Buttons Row -->
+    <div class="action-buttons">
+      <button @click="toggleExpanded" class="expand-btn">
+        <span v-if="!isExpanded">Visa mer</span>
+        <span v-else>Visa mindre</span>
+        <svg class="expand-icon" :class="{ 'rotated': isExpanded }" viewBox="0 0 24 24" fill="none">
+          <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      
+      <button @click="toggleFavorite" class="favorite-btn" :class="{ 'favorited': props.isFavorited }">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" 
+                :stroke="props.isFavorited ? 'none' : 'currentColor'" 
+                :fill="props.isFavorited ? 'currentColor' : 'none'" 
+                stroke-width="2"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Expanded Content -->
+    <div v-if="isExpanded || isContracting" class="expanded-content" :class="{ 'contracting': isContracting }">
+      <div class="job-details">
+        <div class="detail-section">
+          <h4>Beskrivning</h4>
+          <div class="job-description" v-html="formattedDescription"></div>
+        </div>
+        
+        <div class="detail-section" v-if="job.employmentType">
+          <h4>Anställningsform</h4>
+          <p>{{ job.employmentType }}</p>
+        </div>
+        
+        <div class="detail-section" v-if="job.workingHours">
+          <h4>Arbetstid</h4>
+          <p>{{ job.workingHours }}</p>
+        </div>
+        
+        <div class="detail-section" v-if="job.salary">
+          <h4>Lön</h4>
+          <p>{{ job.salary }}</p>
         </div>
       </div>
-      <p class="employer-text">{{ job.employer?.name }}</p>
-      <p class="deadline-text">Sista ansökningsdatum: {{ formatDate(job.application_deadline) }}</p>
+      
+      <!-- Action Buttons -->
+      <div class="expanded-actions">
+        <button @click="applyToJob" class="action-btn apply-btn">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+            <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+            <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2"/>
+            <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2"/>
+            <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          Ansök
+        </button>
+        
+        <button @click="optimizeCV" class="action-btn optimize-btn">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/>
+            <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 18v-6l-3 3" stroke="currentColor" stroke-width="2"/>
+            <path d="M9 15l3-3 3 3" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          Optimera CV
+        </button>
+        
+        <button @click="optimizeCoverLetter" class="action-btn optimize-btn">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z" stroke="currentColor" stroke-width="2"/>
+            <path d="M3 9l9 6 9-6" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 15v-6l-3 3" stroke="currentColor" stroke-width="2"/>
+            <path d="M9 12l3-3 3 3" stroke="currentColor" stroke-width="2"/>
+          </svg>
+          Optimera Personligt Brev
+        </button>
+      </div>
     </div>
-  </NuxtLink>
+    
+    <!-- Personal Letter Section -->
+    <div v-if="showPersonalLetter" class="personal-letter-section">
+      <div class="personal-letter-header">
+        <h4>Personligt Brev</h4>
+        <button @click="showPersonalLetter = false" class="close-letter-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <div v-if="isGeneratingLetter" class="generating-message">
+        <div class="spinner"></div>
+        <p>Genererar personligt brev...</p>
+      </div>
+      
+      <div v-else class="letter-content">
+        <textarea 
+          v-model="personalLetter" 
+          class="letter-textarea"
+          placeholder="Ditt personliga brev kommer att visas här..."
+          rows="10"
+        ></textarea>
+        
+        <div class="letter-actions">
+          <div class="prompt-section">
+            <input 
+              v-model="personalLetterPrompt" 
+              type="text" 
+              class="prompt-input"
+              placeholder="Lägg till instruktioner för att regenerera brevet..."
+              @keypress.enter="regeneratePersonalLetter"
+            />
+            <button 
+              @click="regeneratePersonalLetter" 
+              class="regenerate-btn"
+              :disabled="!personalLetterPrompt.trim() || isGeneratingLetter"
+            >
+              Regenerera
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-
-interface Job {
-  id: string | number
-  headline?: string
-  employer?: {
-    name?: string
-  }
-  application_deadline?: string
-  workplace_address?: {
-    city?: string
-    municipality?: string
-    country?: string
-  }
-  description?: {
-    text: string
-  }
-  occupation?: { label?: string }
-  occupation_field?: { label?: string }
-  working_hours_type?: { label?: string }
-}
+import { computed, ref } from 'vue'
+import type { SimpleJob } from '../types/platsbanken'
 
 interface Props {
-  job: Job
+  job: SimpleJob
   index: number
   isEven: boolean
+  isFavorited?: boolean
+}
+
+interface Emits {
+  (e: 'toggle-favorite'): void
 }
 
 const props = defineProps<Props>()
+const emit = defineEmits<Emits>()
+
+// Component state
+const isExpanded = ref(false)
+const isContracting = ref(false)
+const showPersonalLetter = ref(false)
+const personalLetter = ref('')
+const personalLetterPrompt = ref('')
+const isGeneratingLetter = ref(false)
+
+// Methods
+const toggleExpanded = () => {
+  if (isExpanded.value) {
+    // Start contracting
+    isContracting.value = true
+    // Wait for content to fade out, then collapse container
+    setTimeout(() => {
+      isExpanded.value = false
+      isContracting.value = false
+    }, 300) // Match the fadeOut animation duration
+  } else {
+    // Expand immediately
+    isExpanded.value = true
+    isContracting.value = false
+  }
+}
+
+const toggleFavorite = () => {
+  emit('toggle-favorite')
+}
+
+const applyToJob = () => {
+  if (props.job.applicationUrl) {
+    window.open(props.job.applicationUrl, '_blank')
+  } else if (props.job.applicationEmail) {
+    window.location.href = `mailto:${props.job.applicationEmail}?subject=Ansökan - ${props.job.title}`
+  } else {
+    alert('Ingen ansökningslänk tillgänglig för detta jobb.')
+  }
+}
+
+const optimizeCV = () => {
+  // TODO: Navigate to profile page with CV optimization for this job
+  alert('CV-optimering kommer snart! Detta kommer att öppna profilsidan med AI-optimering för detta specifika jobb.')
+}
+
+const optimizeCoverLetter = () => {
+  showPersonalLetter.value = !showPersonalLetter.value
+  if (showPersonalLetter.value && !personalLetter.value) {
+    generatePersonalLetter()
+  }
+}
+
+const generatePersonalLetter = async () => {
+  isGeneratingLetter.value = true
+  try {
+    // TODO: Replace with actual OpenAI API call
+    await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate API call
+    personalLetter.value = `Hej,
+
+Jag skriver för att uttrycka mitt intresse för tjänsten som ${props.job.title} hos ${props.job.company}. 
+
+Med min bakgrund inom [din bakgrund] och passion för [relevant område], tror jag att jag skulle vara en värdefull tillgång för ert team.
+
+Jag ser fram emot möjligheten att diskutera hur mina färdigheter kan bidra till ${props.job.company}s fortsatta framgång.
+
+Med vänliga hälsningar,
+[Ditt namn]`
+  } catch (error) {
+    console.error('Error generating personal letter:', error)
+  } finally {
+    isGeneratingLetter.value = false
+  }
+}
+
+const regeneratePersonalLetter = async () => {
+  if (!personalLetterPrompt.value.trim()) return
+  
+  isGeneratingLetter.value = true
+  try {
+    // TODO: Replace with actual OpenAI API call using the custom prompt
+    await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate API call
+    personalLetter.value = `Hej,
+
+Baserat på din begäran: "${personalLetterPrompt.value}"
+
+[Här skulle det genererade personliga brevet baserat på din prompt visas]
+
+Med vänliga hälsningar,
+[Ditt namn]`
+  } catch (error) {
+    console.error('Error regenerating personal letter:', error)
+  } finally {
+    isGeneratingLetter.value = false
+    personalLetterPrompt.value = ''
+  }
+}
+
+const formattedDescription = computed(() => {
+  if (!props.job.description) return 'Ingen beskrivning tillgänglig.'
+  
+  // Basic HTML formatting for job descriptions
+  return props.job.description
+    .replace(/\n\n/g, '</p><p>')
+    .replace(/\n/g, '<br>')
+    .replace(/^/, '<p>')
+    .replace(/$/, '</p>')
+})
 
 const greenShade = computed(() => 120 - (props.index * 10))
 
 const jobStyle = computed(() => ({
-  height: '135px',
+  minHeight: isExpanded.value ? 'auto' : '135px',
   width: '100%',
   border: '1px solid black',
   backgroundColor: props.isEven ? '#F8F8F8' : '#F8F8F8',
@@ -76,9 +292,7 @@ const innerTopLeftBarStyle = computed(() => ({
 }))
 
 const displayLocation = computed(() => {
-  return props.job.workplace_address?.municipality || 
-         props.job.workplace_address?.city || 
-         'Plats ej tillgänglig'
+  return props.job.location || 'Plats ej tillgänglig'
 })
 
 function formatDate(dateString?: string): string {
@@ -101,7 +315,246 @@ function formatDate(dateString?: string): string {
 }
 
 .job-container {
+  cursor: default;
+  min-height: 135px;
+  max-height: 135px;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.job-container.expanded {
+  min-height: auto;
+  max-height: 1000px;
+  transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.job-container.contracting {
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.job-container:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Action Buttons */
+.action-buttons {
+  position: absolute;
+  top: 97px;
+  right: 8px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  z-index: 10;
+}
+
+.job-container.expanded .action-buttons {
+  position: absolute;
+  top: 97px;
+  right: 8px;
+  z-index: 10;
+}
+
+.expand-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background-color: white;
+  border: 1px solid black;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.expand-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.expand-icon {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.2s;
+}
+
+.expand-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.favorite-btn {
+  padding: 4px;
+  background-color: white;
+  border: 1px solid black;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.favorite-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.favorite-btn.favorited {
+  background-color: #1D6453;
+  color: white;
+}
+
+.favorite-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Expanded Content */
+.expanded-content {
+  position: relative;
+  margin-top: 12px;
+  padding: 12px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #fafafa;
+  width: calc(100% - 24px);
+  margin-left: 12px;
+  margin-right: 12px;
+  margin-bottom: 6px;
+  box-sizing: border-box;
+  max-width: calc(100% - 24px);
+}
+
+@keyframes expandedContentFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes expandedContentFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+.job-details {
+  margin-bottom: 16px;
+}
+
+.detail-section {
+  margin-bottom: 12px;
+}
+
+.detail-section h4 {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #333;
+}
+
+.detail-section p {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  margin: 0;
+  color: #666;
+  line-height: 1.4;
+}
+
+.job-description {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+  background-color: white;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #e8e8e8;
+}
+
+.job-description p {
+  margin: 0 0 8px 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+/* Action Buttons in Expanded State */
+.expanded-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid black;
+  background-color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.apply-btn:hover {
+  background-color: #1D6453;
+  color: white;
+}
+
+.optimize-btn:hover {
+  background-color: #e8f4f1;
+  border-color: #1D6453;
+  color: #1D6453;
+}
+
+.action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .action-buttons {
+    position: static;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  
+  .expanded-actions {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .job-container {
+    min-height: auto;
+  }
 }
 
 .inner-div {
@@ -228,5 +681,160 @@ function formatDate(dateString?: string): string {
     margin: 0 0 1rem 1rem;
     font-size: 0.875rem;
   }
+}
+
+/* Personal Letter Section */
+.personal-letter-section {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  animation: letterSectionFadeIn 0.3s ease-out;
+}
+
+@keyframes letterSectionFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.personal-letter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.personal-letter-header h4 {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1D6453;
+  margin: 0;
+}
+
+.close-letter-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.close-letter-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.close-letter-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.generating-message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e0e0e0;
+  border-top: 2px solid #1D6453;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.letter-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.letter-textarea {
+  width: 100%;
+  min-height: 200px;
+  padding: 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.letter-textarea:focus {
+  outline: none;
+  border-color: #1D6453;
+  box-shadow: 0 0 0 2px rgba(29, 100, 83, 0.1);
+}
+
+.letter-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prompt-section {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.prompt-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+}
+
+.prompt-input:focus {
+  outline: none;
+  border-color: #1D6453;
+  box-shadow: 0 0 0 2px rgba(29, 100, 83, 0.1);
+}
+
+.regenerate-btn {
+  padding: 8px 16px;
+  background-color: #1D6453;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.regenerate-btn:hover:not(:disabled) {
+  background-color: #155242;
+}
+
+.regenerate-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 </style>
