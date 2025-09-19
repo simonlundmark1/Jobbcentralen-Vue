@@ -1,4 +1,6 @@
 import type { PlatsbankenSearchResponse, PlatsbankenSearchParams, SimpleJob, PlatsbankenJob } from '../../../types/platsbanken'
+import { normalizeMunicipalityForAPI } from '../../utils/municipalityMapping'
+import { normalizeOccupationFieldForAPI } from '../../utils/occupationFieldMapping'
 
 const PLATSBANKEN_API_BASE = 'https://jobsearch.api.jobtechdev.se'
 
@@ -18,9 +20,14 @@ export default defineEventHandler(async (event) => {
     }
     
     if (query.municipality) {
-      searchParams.municipality = Array.isArray(query.municipality) 
+      const municipalities = Array.isArray(query.municipality) 
         ? query.municipality as string[]
         : [query.municipality as string]
+      
+      // Convert municipality names to codes for API compatibility
+      searchParams.municipality = municipalities.map(municipality => 
+        normalizeMunicipalityForAPI(municipality)
+      )
     }
     
     if (query.region) {
@@ -36,9 +43,14 @@ export default defineEventHandler(async (event) => {
     }
     
     if (query['occupation-field']) {
-      searchParams.occupation_field = Array.isArray(query['occupation-field'])
+      const occupationFields = Array.isArray(query['occupation-field'])
         ? query['occupation-field'] as string[]
         : [query['occupation-field'] as string]
+      
+      // Convert occupation field names to codes for API compatibility
+      searchParams.occupation_field = occupationFields.map(occupationField => 
+        normalizeOccupationFieldForAPI(occupationField)
+      )
     }
     
     if (query.employment_type || query['employment-type']) {

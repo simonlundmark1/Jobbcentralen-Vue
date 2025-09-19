@@ -24,12 +24,12 @@
               </svg>
               Min profil
             </NuxtLink>
-            <button class="mobile-btn-secondary" @click="toggleFavoritesView">
+            <NuxtLink to="/my-jobs" class="mobile-btn-secondary">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
               </svg>
               Sparade jobb ({{ favoriteJobs.length }})
-            </button>
+            </NuxtLink>
           </div>
         </div>
         
@@ -66,7 +66,7 @@
       <!-- Results Bar -->
       <div class="results-bar">
         <div class="results-info">
-          <span class="results-count">Hittade {{ displayJobs.length }} jobb</span>
+          <span class="results-count">Hittade {{ totalJobs }} jobb</span>
           
           <!-- Active Filters -->
           <div class="active-filters">
@@ -179,12 +179,54 @@
               </svg>
               Min profil
             </NuxtLink>
-            <button class="sidebar-btn-secondary" @click="toggleFavoritesView">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
-              </svg>
-              Sparade jobb ({{ favoriteJobs.length }})
-            </button>
+            <div class="favorites-dropdown-container">
+              <button class="sidebar-btn-secondary" @click="toggleFavoritesView">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                </svg>
+                Sparade jobb ({{ favoriteJobs.length }})
+                <svg class="dropdown-chevron" :class="{ 'rotated': showFavorites }" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M6 9l6 6 6-6"></path>
+                </svg>
+              </button>
+              
+              <!-- Favorites Dropdown -->
+              <div v-if="showFavorites" class="favorites-dropdown">
+                <div v-if="favoriteJobs.length === 0" class="no-favorites">
+                  <p>Inga sparade jobb än.</p>
+                  <p class="no-favorites-hint">Klicka på hjärtat på ett jobb för att spara det här.</p>
+                </div>
+                
+                <div v-else class="favorites-list">
+                  <div 
+                    v-for="(job, index) in favoriteJobs.slice(0, 3)" 
+                    :key="job.id" 
+                    class="favorite-job-card"
+                  >
+                    <div class="favorite-job-header">
+                      <h4 class="favorite-job-title">{{ job.title }}</h4>
+                      <button @click="toggleFavorite(job)" class="remove-favorite-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <p class="favorite-job-company">{{ job.company }}</p>
+                    <p class="favorite-job-location">{{ job.location }}</p>
+                  </div>
+                  
+                  <div v-if="favoriteJobs.length > 3" class="more-favorites">
+                    <p>+{{ favoriteJobs.length - 3 }} fler sparade jobb</p>
+                  </div>
+                  
+                  <div class="favorites-actions">
+                    <NuxtLink to="/my-jobs" class="view-all-btn">
+                      Visa alla sparade jobb
+                    </NuxtLink>
+                  </div>
+                </div>
+              </div>
+            </div>
             <button class="sidebar-btn-secondary">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
@@ -292,48 +334,6 @@
             </div>
           </div>
         </div>
-        
-        <!-- Favorites Section -->
-        <div v-if="showFavorites" class="sidebar-section favorites-section">
-          <div class="favorites-header">
-            <h3 class="sidebar-section-title">Sparade jobb</h3>
-            <button @click="showFavorites = false" class="close-favorites-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M18 6L6 18M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
-          
-          <div v-if="favoriteJobs.length === 0" class="no-favorites">
-            <p>Inga sparade jobb än.</p>
-            <p class="no-favorites-hint">Klicka på hjärtat på ett jobb för att spara det här.</p>
-          </div>
-          
-          <div v-else class="favorites-list">
-            <div 
-              v-for="(job, index) in favoriteJobs" 
-              :key="job.id" 
-              class="favorite-job-card"
-            >
-              <div class="favorite-job-header">
-                <h4 class="favorite-job-title">{{ job.title }}</h4>
-                <button @click="toggleFavorite(job)" class="remove-favorite-btn">
-                  <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-                  </svg>
-                </button>
-              </div>
-              <p class="favorite-job-company">{{ job.company }}</p>
-              <p class="favorite-job-location">{{ job.location }}</p>
-              <p class="favorite-job-deadline">Sista ansökan: {{ formatDate(job.applicationDeadline) }}</p>
-              <div class="favorite-job-actions">
-                <a v-if="job.applicationUrl" :href="job.applicationUrl" target="_blank" class="favorite-apply-btn">
-                  Ansök
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </aside>
   </div>
@@ -371,6 +371,10 @@ const currentFilters = ref({
   municipality: '',
   workTimeExtent: ''
 })
+
+// Pagination constants
+const jobsPerPage = 20
+const currentOffset = ref(0)
 
 // Mobile menu state
 const showMobileMenu = ref(false)
@@ -426,11 +430,15 @@ const displayJobs = computed(() => {
 
 const handleSearch = (term: string) => {
   searchTerm.value = term
+  currentPage.value = 1 // Reset to first page
+  currentOffset.value = 0 // Reset offset
   console.log('Searching for:', term)
 }
 
 const handleFilterChange = (type: string, value: string) => {
   currentFilters.value[type as keyof typeof currentFilters.value] = value
+  currentPage.value = 1 // Reset to first page
+  currentOffset.value = 0 // Reset offset
   console.log('Filter changed:', type, value)
 }
 
@@ -1194,88 +1202,122 @@ watch([searchTerm, currentFilters], () => {
   min-height: 100vh;
 }
 
-/* Favorites Section */
-.favorites-section {
-  border-top: 1px solid #e0e0e0;
-  margin-top: 16px;
-  padding-top: 16px;
-  animation: favoritesSlideDown 0.3s ease-out;
+/* Favorites Dropdown */
+.favorites-dropdown-container {
+  position: relative;
 }
 
-@keyframes favoritesSlideDown {
+.dropdown-chevron {
+  width: 12px;
+  height: 12px;
+  margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+.dropdown-chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.favorites-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid black;
+  border-top: none;
+  z-index: 1000;
+  animation: dropdownSlideDown 0.2s ease-out;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+@keyframes dropdownSlideDown {
   from {
     opacity: 0;
-    transform: translateY(-20px);
-    max-height: 0;
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-    max-height: 1000px;
   }
-}
-
-.favorites-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.close-favorites-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
-
-.close-favorites-btn:hover {
-  background-color: #f0f0f0;
-}
-
-.close-favorites-btn svg {
-  width: 16px;
-  height: 16px;
 }
 
 .no-favorites {
   text-align: center;
-  padding: 32px 16px;
+  padding: 24px 16px;
   color: #666;
 }
 
 .no-favorites p {
   margin: 0 0 8px 0;
   font-family: 'Inter', sans-serif;
+  font-size: 14px;
 }
 
 .no-favorites-hint {
-  font-size: 14px;
+  font-size: 12px;
   opacity: 0.8;
 }
 
 .favorites-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 1px;
+  padding: 8px;
 }
 
 .favorite-job-card {
-  padding: 16px;
-  background-color: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  transition: box-shadow 0.2s;
+  padding: 12px;
+  background-color: #f9f9f9;
+  border: 1px solid black;
+  transition: background-color 0.2s;
 }
 
 .favorite-job-card:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f0f0f0;
+}
+
+.more-favorites {
+  text-align: center;
+  padding: 12px;
+  color: #666;
+  font-style: italic;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 8px;
+}
+
+.more-favorites p {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+}
+
+.favorites-actions {
+  padding: 8px;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.view-all-btn {
+  display: block;
+  width: calc(100% - 32px);
+  padding: 8px 12px;
+  background-color: #1D6453;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  border: 1px solid black;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.view-all-btn:hover {
+  background-color: #155242;
 }
 
 .favorite-job-header {

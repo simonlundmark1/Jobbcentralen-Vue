@@ -21,8 +21,11 @@
         </svg>
       </button>
       
-      <button @click="toggleFavorite" class="favorite-btn" :class="{ 'favorited': props.isFavorited }">
-        <svg viewBox="0 0 24 24" fill="none">
+      <button @click="toggleFavorite" class="favorite-btn" :class="{ 'favorited': props.isFavorited, 'trash-btn': props.showTrashIcon }">
+        <svg v-if="props.showTrashIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14ZM10 11v6M14 11v6"/>
+        </svg>
+        <svg v-else viewBox="0 0 24 24" fill="none">
           <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" 
                 :stroke="props.isFavorited ? 'none' : 'currentColor'" 
                 :fill="props.isFavorited ? 'currentColor' : 'none'" 
@@ -85,7 +88,7 @@
             <path d="M12 15v-6l-3 3" stroke="currentColor" stroke-width="2"/>
             <path d="M9 12l3-3 3 3" stroke="currentColor" stroke-width="2"/>
           </svg>
-          Optimera Personligt Brev
+          Generera personligt brev
         </button>
       </div>
     </div>
@@ -146,6 +149,7 @@ interface Props {
   index: number
   isEven: boolean
   isFavorited?: boolean
+  showTrashIcon?: boolean
 }
 
 interface Emits {
@@ -264,15 +268,32 @@ const formattedDescription = computed(() => {
 
 const greenShade = computed(() => 120 - (props.index * 10))
 
-const jobStyle = computed(() => ({
-  minHeight: isExpanded.value ? 'auto' : '135px',
-  width: '100%',
-  border: '1px solid black',
-  backgroundColor: props.isEven ? '#F8F8F8' : '#F8F8F8',
-  boxSizing: 'border-box' as const,
-  margin: '0 0 6px 0',
-  position: 'relative' as const,
-}))
+const jobStyle = computed(() => {
+  let minHeight = '135px'
+  let height = '135px'
+  
+  if (isExpanded.value || showPersonalLetter.value) {
+    minHeight = 'auto'
+    height = 'auto'
+    
+    // Add extra height when personal letter is shown to ensure proper expansion
+    if (showPersonalLetter.value) {
+      minHeight = '600px' // Ensure enough space for the letter section
+    }
+  }
+  
+  return {
+    minHeight,
+    height,
+    width: '100%',
+    border: '1px solid black',
+    backgroundColor: props.isEven ? '#FCFCFC' : '#F8F8F8',
+    boxSizing: 'border-box' as const,
+    margin: '0 0 6px 0',
+    position: 'relative' as const,
+    overflow: 'visible' as const,
+  }
+})
 
 const topLeftBoxStyle = computed(() => ({
   height: '40px',
@@ -327,7 +348,7 @@ function formatDate(dateString?: string): string {
 
 .job-container.expanded {
   min-height: auto;
-  max-height: 1000px;
+  max-height: none;
   transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
 }
 
@@ -403,6 +424,16 @@ function formatDate(dateString?: string): string {
 .favorite-btn.favorited {
   background-color: #1D6453;
   color: white;
+}
+
+.favorite-btn.trash-btn {
+  background-color: white;
+  color: black;
+}
+
+.favorite-btn.trash-btn:hover {
+  background-color: #f0f0f0;
+  color: black;
 }
 
 .favorite-btn svg {
@@ -685,12 +716,15 @@ function formatDate(dateString?: string): string {
 
 /* Personal Letter Section */
 .personal-letter-section {
-  margin-top: 16px;
+  margin: 16px 12px 12px 12px;
   padding: 16px;
   background-color: #f8f9fa;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   animation: letterSectionFadeIn 0.3s ease-out;
+  width: calc(100% - 24px);
+  box-sizing: border-box;
+  min-height: 300px;
 }
 
 @keyframes letterSectionFadeIn {

@@ -1,6 +1,26 @@
+import { municipalityNameToCode } from '../../utils/municipalityMapping'
+import { occupationFieldNameToCode } from '../../utils/occupationFieldMapping'
+
 export default defineEventHandler(async (event) => {
   try {
-    // Fetch a sample of jobs to extract filter options
+    // Fetch both municipality and occupation field statistics from the API
+    const statsResponse = await fetch('https://jobsearch.api.jobtechdev.se/search?stats=municipality&stats=occupation-field&stats.limit=30&limit=1')
+    
+    if (!statsResponse.ok) {
+      throw new Error(`Platsbanken API returned ${statsResponse.status}: ${statsResponse.statusText}`)
+    }
+    
+    const statsData = await statsResponse.json()
+    const municipalityStats = statsData.stats?.find((stat: any) => stat.type === 'municipality')?.values || []
+    const occupationFieldStats = statsData.stats?.find((stat: any) => stat.type === 'occupation-field')?.values || []
+    
+    // Extract municipality names from stats (these are the actual available municipalities)
+    const availableMunicipalities = municipalityStats.map((stat: any) => stat.term).filter(Boolean)
+    
+    // Extract occupation field names from stats (these are the actual available occupation fields)
+    const availableOccupationFields = occupationFieldStats.map((stat: any) => stat.term).filter(Boolean)
+    
+    // Fetch a sample of jobs to extract other filter options
     const response = await fetch('https://jobsearch.api.jobtechdev.se/search?limit=100')
     
     if (!response.ok) {
@@ -12,16 +32,12 @@ export default defineEventHandler(async (event) => {
     
     // Extract unique values for filters
     const occupationFields = new Set<string>()
-    const municipalities = new Set<string>()
     const workTimeExtents = new Set<string>()
     const employmentTypes = new Set<string>()
     
     jobs.forEach((job: any) => {
       if (job.occupation_field?.label) {
         occupationFields.add(job.occupation_field.label)
-      }
-      if (job.workplace_address?.municipality) {
-        municipalities.add(job.workplace_address.municipality)
       }
       if (job.working_hours_type?.label) {
         workTimeExtents.add(job.working_hours_type.label)
@@ -34,8 +50,8 @@ export default defineEventHandler(async (event) => {
     return {
       success: true,
       data: {
-        occupationFields: Array.from(occupationFields).sort(),
-        municipalities: Array.from(municipalities).sort(),
+        occupationFields: availableOccupationFields.sort(),
+        municipalities: availableMunicipalities.sort(),
         workTimeExtents: Array.from(workTimeExtents).sort(),
         employmentTypes: Array.from(employmentTypes).sort()
       }
@@ -44,52 +60,12 @@ export default defineEventHandler(async (event) => {
   } catch (error) {
     console.error('Error fetching filter options:', error)
     
-    // Return fallback options
+    // Return fallback options with municipalities from our mapping
     return {
       success: true,
       data: {
-        occupationFields: [
-          'Data/IT',
-          'Ekonomi, finans',
-          'Hälso- och sjukvård',
-          'Utbildning',
-          'Försäljning, inköp, marknadsföring',
-          'Teknik, tillverkning',
-          'Administration, ekonomi, juridik',
-          'Bygg och anläggning',
-          'Chefer och verksamhetsledare',
-          'Hotell, restaurang, turism',
-          'Kultur, media',
-          'Naturbruk',
-          'Pedagogiskt arbete',
-          'Sanering och renhållning',
-          'Säkerhetstjänst',
-          'Transport',
-          'Vård och omsorg',
-          'Militärt arbete'
-        ],
-        municipalities: [
-          'Stockholm',
-          'Göteborg',
-          'Malmö',
-          'Uppsala',
-          'Västerås',
-          'Örebro',
-          'Linköping',
-          'Helsingborg',
-          'Jönköping',
-          'Norrköping',
-          'Lund',
-          'Umeå',
-          'Gävle',
-          'Borås',
-          'Södertälje',
-          'Eskilstuna',
-          'Halmstad',
-          'Växjö',
-          'Karlstad',
-          'Sundsvall'
-        ],
+        occupationFields: Object.keys(occupationFieldNameToCode).sort(),
+        municipalities: Object.keys(municipalityNameToCode).sort(),
         workTimeExtents: [
           'Heltid',
           'Deltid',

@@ -470,7 +470,7 @@ const clearFilter = (type: string) => {
 }
 
 .search-container {
-  padding: 16px;
+  padding: 6px;
 }
 
 .main-heading {
@@ -478,7 +478,7 @@ const clearFilter = (type: string) => {
   font-weight: 700;
   font-size: 19px;
   text-align: left;
-  margin: 0 0 16px 0;
+  margin: 6px 0 16px 0;
   line-height: 118%;
   letter-spacing: -0.04em;
 }
@@ -507,7 +507,7 @@ const clearFilter = (type: string) => {
 
 .search-input {
   flex: 1;
-  border: 1px solid black;
+  border: 1px solid black !important;
   outline: none;
   padding: 8px 12px;
   font-family: 'Inter', sans-serif;
@@ -747,12 +747,15 @@ const clearFilter = (type: string) => {
 
 /* Desktop styles - ensure they override mobile */
 @media (min-width: 769px) {
-  .search-input-wrapper {
+  .search-input {
     border: 1px solid black !important;
-    border-top: 1px solid black !important;
-    border-bottom: 1px solid black !important;
+    height: 28px !important;
+  }
+  
+  .search-input-wrapper {
     height: 30px !important;
     width: 340px !important;
+    border: none !important;
   }
 }
 
