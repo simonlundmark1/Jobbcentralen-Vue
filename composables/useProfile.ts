@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 
 export interface Profile {
   firstName: string
@@ -24,15 +24,41 @@ Hejsan!
 Jag fann er annons på _____ och det låter som något för mig. Jag har en bakgrund som _____ och har jobbat ganska länge inom _____ med allt ifrån _____ till _____. Jag söker nu ett jobb som är mer i linje med den tjänst ni beskriver, och tror jag skulle kunna tillföra mycket hos er.`
 
 export const useProfile = () => {
-  const profile = ref<Profile>({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    address: '',
-    summary: '',
-    cvFile: null,
-    coverLetterTemplate: defaultCoverLetterTemplate
+  // Use Nuxt's useState to create a global shared state
+  const profile = useState<Profile>('user-profile', () => {
+    // Try to load from localStorage immediately during initialization
+    if (typeof window !== 'undefined') {
+      const savedProfile = localStorage.getItem('jobbcentralen-profile')
+      if (savedProfile) {
+        try {
+          const parsed = JSON.parse(savedProfile)
+          return {
+            firstName: parsed.firstName || '',
+            lastName: parsed.lastName || '',
+            email: parsed.email || '',
+            phone: parsed.phone || '',
+            address: parsed.address || '',
+            summary: parsed.summary || '',
+            cvFile: null,
+            coverLetterTemplate: parsed.coverLetterTemplate || defaultCoverLetterTemplate
+          }
+        } catch (error) {
+          console.error('Error loading profile during initialization:', error)
+        }
+      }
+    }
+    
+    // Fallback to empty profile
+    return {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      address: '',
+      summary: '',
+      cvFile: null,
+      coverLetterTemplate: defaultCoverLetterTemplate
+    }
   })
 
   const isProfileComplete = computed(() => {

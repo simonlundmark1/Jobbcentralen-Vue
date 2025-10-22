@@ -196,6 +196,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 
+interface FilterOptions {
+  occupationFields: string[]
+  municipalities: string[]
+  workTimeExtents: string[]
+  employmentTypes: string[]
+}
+
 interface Props {
   jobs?: any[]
 }
@@ -222,11 +229,11 @@ const showOccupationDropdown = ref(false)
 const showWorkTimeDropdown = ref(false)
 
 // Filter options from API
-const filterOptions = ref({
-  occupationFields: [] as string[],
-  municipalities: [] as string[],
-  workTimeExtents: [] as string[],
-  employmentTypes: [] as string[]
+const filterOptions = ref<FilterOptions>({
+  occupationFields: [],
+  municipalities: [],
+  workTimeExtents: [],
+  employmentTypes: []
 })
 
 // Global click handler reference
@@ -239,7 +246,7 @@ const globalClickHandler = () => {
 // Fetch filter options on mount
 onMounted(async () => {
   try {
-    const response = await $fetch('/api/jobs/filter-options')
+    const response = await $fetch<{ success: boolean; data: FilterOptions }>('/api/jobs/filter-options')
     if (response.success) {
       filterOptions.value = response.data
     }

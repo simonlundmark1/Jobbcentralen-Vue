@@ -132,10 +132,10 @@ async function handleGenerate() {
       body.jobDescription = jobDescription.value
     }
     
-    const response = await $fetch(props.apiEndpoint, {
+    const response = await $fetch<{ success: boolean; cv?: string; coverLetter?: string }>(props.apiEndpoint, {
       method: 'POST',
       body
-    }) as { success: boolean; cv?: string; coverLetter?: string }
+    })
     
     if (response.success) {
       generatedContent.value = response.cv || response.coverLetter || ''

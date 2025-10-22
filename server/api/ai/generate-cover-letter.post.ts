@@ -33,15 +33,25 @@ export default defineEventHandler(async (event) => {
     
     Mall (om tillgänglig): ${profile.coverLetterTemplate || 'Ingen mall tillgänglig'}
     
-    Skapa ett professionellt och personligt brev som:
-    1. Är skrivet på svenska
-    2. Är anpassat för den specifika positionen och företaget
-    3. Framhäver relevanta färdigheter och erfarenheter
-    4. Har en professionell ton
-    5. Är cirka 3-4 stycken långt
-    6. Inkluderar en stark öppning och avslutning
+    VIKTIGA KRAV:
+    1. Skriv ett naturligt och mänskligt personligt brev på svenska
+    2. Börja DIREKT med "Hej" eller hälsning - INGEN adressblock
+    3. Inkludera INTE kontaktuppgifter, adresser eller formella brevhuvuden
+    4. Inkludera INTE platshållare som [Adress], [Datum], [Postnummer] etc
+    5. Fokusera på innehållet: varför personen är lämplig för jobbet
+    6. Använd personens faktiska namn (${profile.firstName} ${profile.lastName}) om det passar naturligt i texten
+    7. Matcha jobbeskrivningen noga och koppla personens erfarenhet till kraven
+    8. Ha en naturlig, entusiastisk och professionell ton
+    9. Gör brevet cirka 3-4 stycken långt
+    10. Avsluta med "Med vänliga hälsningar," följt av personens namn
+    11. Skriv som om en riktig människa skriver brevet, inte som en mall
     
-    Formatera det som ett komplett brev med datum, mottagare och avslutning.
+    Exempel på bra början:
+    "Hej,
+    
+    Jag heter ${profile.firstName} och jag är mycket intresserad av tjänsten som ${jobTitle} hos ${companyName}..."
+    
+    Skapa NU ett personligt brev som följer dessa krav EXAKT.
     `
 
     const completion = await openai.chat.completions.create({
@@ -49,7 +59,7 @@ export default defineEventHandler(async (event) => {
       messages: [
         {
           role: "system",
-          content: "Du är en expert på att skriva professionella personliga brev på svenska. Skapa alltid välstrukturerade och övertygande brev som är anpassade för den specifika positionen."
+          content: "Du är en expert på att skriva naturliga, mänskliga personliga brev på svenska. Skriv aldrig som en mall eller med platshållare. Skapa personliga, genuina brev som låter som de är skrivna av en riktig person, inte av AI. Inkludera aldrig adressblock, datum eller formella brevhuvuden. Fokusera på innehållet och personen bakom ansökan."
         },
         {
           role: "user",

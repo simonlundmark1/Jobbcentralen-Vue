@@ -15,9 +15,10 @@ interface ConceptsResponse {
 const PLATSBANKEN_API_BASE = 'https://jobsearch.api.jobtechdev.se'
 
 export default defineEventHandler(async (event) => {
+  const query = getQuery(event)
+  const type = query.type as string
+  
   try {
-    const query = getQuery(event)
-    const type = query.type as string
     
     // Fetch specific concept type or all
     const endpoints = {

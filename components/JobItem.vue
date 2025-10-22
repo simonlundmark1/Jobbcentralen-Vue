@@ -143,6 +143,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import type { SimpleJob } from '../types/platsbanken'
+import { useProfile } from '../composables/useProfile'
 
 interface Props {
   job: SimpleJob
@@ -158,6 +159,9 @@ interface Emits {
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
+
+// Get profile from global state
+const { profile } = useProfile()
 
 // Component state
 const isExpanded = ref(false)
@@ -213,20 +217,45 @@ const optimizeCoverLetter = () => {
 const generatePersonalLetter = async () => {
   isGeneratingLetter.value = true
   try {
-    // TODO: Replace with actual OpenAI API call
-    await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate API call
-    personalLetter.value = `Hej,
-
-Jag skriver för att uttrycka mitt intresse för tjänsten som ${props.job.title} hos ${props.job.company}. 
-
-Med min bakgrund inom [din bakgrund] och passion för [relevant område], tror jag att jag skulle vara en värdefull tillgång för ert team.
-
-Jag ser fram emot möjligheten att diskutera hur mina färdigheter kan bidra till ${props.job.company}s fortsatta framgång.
-
-Med vänliga hälsningar,
-[Ditt namn]`
-  } catch (error) {
+    // Debug: Log what we're sending
+    console.log('Generating cover letter with profile:', {
+      firstName: profile.value.firstName,
+      lastName: profile.value.lastName,
+      email: profile.value.email,
+      phone: profile.value.phone,
+      summary: profile.value.summary
+    })
+    
+    const response = await $fetch('/api/ai/generate-cover-letter', {
+      method: 'POST',
+      body: {
+        profile: profile.value,
+        jobTitle: props.job.title,
+        companyName: props.job.company,
+        jobDescription: props.job.description
+      }
+    })
+    
+    if (response.success) {
+      personalLetter.value = response.coverLetter
+    } else {
+      throw new Error('Failed to generate cover letter')
+    }
+  } catch (error: any) {
     console.error('Error generating personal letter:', error)
+    
+    // Show more specific error message
+    let errorMessage = 'Fel vid generering av personligt brev.'
+    
+    if (error.statusCode === 500) {
+      errorMessage += '\n\nTroligen saknas OpenAI API-nyckel. Kontakta administratören.'
+    } else if (error.statusCode === 400) {
+      errorMessage += '\n\nKontrollera att du har fyllt i alla obligatoriska fält i din profil (namn, email, telefon).'
+    } else {
+      errorMessage += '\n\nFel: ' + (error.message || 'Okänt fel')
+    }
+    
+    personalLetter.value = errorMessage
   } finally {
     isGeneratingLetter.value = false
   }
@@ -237,18 +266,36 @@ const regeneratePersonalLetter = async () => {
   
   isGeneratingLetter.value = true
   try {
-    // TODO: Replace with actual OpenAI API call using the custom prompt
-    await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate API call
-    personalLetter.value = `Hej,
-
-Baserat på din begäran: "${personalLetterPrompt.value}"
-
-[Här skulle det genererade personliga brevet baserat på din prompt visas]
-
-Med vänliga hälsningar,
-[Ditt namn]`
-  } catch (error) {
+    // Add custom instructions to the job description
+    const customJobDescription = `${props.job.description}\n\nExtra instruktioner: ${personalLetterPrompt.value}`
+    
+    const response = await $fetch('/api/ai/generate-cover-letter', {
+      method: 'POST',
+      body: {
+        profile: profile.value,
+        jobTitle: props.job.title,
+        companyName: props.job.company,
+        jobDescription: customJobDescription
+      }
+    })
+    
+    if (response.success) {
+      personalLetter.value = response.coverLetter
+    } else {
+      throw new Error('Failed to regenerate cover letter')
+    }
+  } catch (error: any) {
     console.error('Error regenerating personal letter:', error)
+    
+    let errorMessage = 'Fel vid regenerering av personligt brev.'
+    
+    if (error.statusCode === 500) {
+      errorMessage += '\n\nTroligen saknas OpenAI API-nyckel. Kontakta administratören.'
+    } else {
+      errorMessage += '\n\nFel: ' + (error.message || 'Okänt fel')
+    }
+    
+    personalLetter.value = errorMessage
   } finally {
     isGeneratingLetter.value = false
     personalLetterPrompt.value = ''
@@ -266,7 +313,6 @@ const formattedDescription = computed(() => {
     .replace(/$/, '</p>')
 })
 
-const greenShade = computed(() => 120 - (props.index * 10))
 
 const jobStyle = computed(() => {
   let minHeight = '135px'
@@ -303,12 +349,12 @@ const topLeftBoxStyle = computed(() => ({
   left: '6px',
   border: '1px solid black',
   whiteSpace: 'nowrap' as const,
-  backgroundColor: `rgb(29, ${greenShade.value}, 83)`,
+  backgroundColor: '#1D6453',
 }))
 
 const innerTopLeftBarStyle = computed(() => ({
   height: '6px',
-  backgroundColor: `rgb(19, ${greenShade.value - 15}, 73)`,
+  backgroundColor: '#155242',
   width: '100%',
 }))
 
