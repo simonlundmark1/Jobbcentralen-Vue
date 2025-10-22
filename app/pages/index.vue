@@ -70,14 +70,40 @@
           
           <!-- Active Filters -->
           <div class="active-filters">
-            <!-- Platform Filter -->
-            <div class="filter-tag">
-              <span class="filter-text">Platsbanken</span>
-              <button @click="removePlatformFilter" class="filter-remove">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                  <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
-                  <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
+            <!-- Source Filter Buttons -->
+            <div class="source-filters">
+              <button 
+                @click="setSource('all')"
+                :class="['source-filter-btn', currentSource === 'all' ? 'active' : '']"
+                title="Visa alla jobb"
+              >
+                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
                 </svg>
+                Alla
+              </button>
+              
+              <button 
+                @click="setSource('platsbanken')"
+                :class="['source-filter-btn', 'platsbanken', currentSource === 'platsbanken' ? 'active' : '']"
+                title="Endast Platsbanken"
+              >
+                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                </svg>
+                Platsbanken
+              </button>
+              
+              <button 
+                @click="setSource('teamtailor')"
+                :class="['source-filter-btn', 'teamtailor', currentSource === 'teamtailor' ? 'active' : '']"
+                title="Endast TeamTailor"
+              >
+                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"/>
+                </svg>
+                TeamTailor
               </button>
             </div>
             
@@ -450,10 +476,13 @@ const removeFilter = (type: string) => {
   }
 }
 
-const removePlatformFilter = () => {
-  // For now, just show an alert since we only have Platsbanken
-  // In the future, this could switch to other job platforms
-  alert('Platsbanken är för närvarande den enda tillgängliga plattformen')
+const currentSource = ref<'all' | 'platsbanken' | 'teamtailor'>('all')
+
+const setSource = (source: 'all' | 'platsbanken' | 'teamtailor') => {
+  currentSource.value = source
+  currentPage.value = 1
+  currentOffset.value = 0
+  fetchJobs()
 }
 
 // Computed properties for pagination
@@ -492,7 +521,10 @@ const fetchJobs = async (append = false) => {
       params.append('employment-type', currentFilters.value.workTimeExtent)
     }
     
-    const response = await $fetch(`/api/jobs/platsbanken?${params.toString()}`)
+    // Add source parameter
+    params.append('source', currentSource.value)
+    
+    const response = await $fetch(`/api/jobs/combined?${params.toString()}`)
     
     if (response.success) {
       if (append) {
@@ -523,7 +555,7 @@ onMounted(() => {
 })
 
 // Watch for filter changes
-watch([searchTerm, currentFilters], () => {
+watch([searchTerm, currentFilters, currentSource], () => {
   fetchJobs()
 }, { deep: true })
 </script>
@@ -637,6 +669,53 @@ watch([searchTerm, currentFilters], () => {
 
 .filter-remove:hover {
   background-color: rgba(255, 255, 255, 0.2);
+}
+
+.source-filters {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.source-filter-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-color: white;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.source-filter-btn:hover {
+  background-color: #f8fafc;
+  color: #334155;
+}
+
+.source-filter-btn.active {
+  background-color: #116A3E;
+  color: white;
+  border-color: #116A3E;
+}
+
+.source-filter-btn.platsbanken.active {
+  background-color: #10b981;
+  border-color: #10b981;
+}
+
+.source-filter-btn.teamtailor.active {
+  background-color: #8b5cf6;
+  border-color: #8b5cf6;
+}
+
+.source-filter-btn svg {
+  flex-shrink: 0;
 }
 
 .sort-controls {

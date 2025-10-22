@@ -3,17 +3,35 @@
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between">
       <!-- Main Content -->
       <div class="flex-1">
-        <!-- Job Title -->
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">
-          <a 
-            :href="applicationUrl" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            class="hover:text-primary-600 transition-colors duration-200"
+        <!-- Job Title with Source Badge -->
+        <div class="flex items-start justify-between gap-2 mb-2">
+          <h3 class="text-lg font-semibold text-gray-900 flex-1">
+            <a 
+              :href="applicationUrl" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="hover:text-primary-600 transition-colors duration-200"
+            >
+              {{ job.title }}
+            </a>
+          </h3>
+          <span 
+            v-if="jobSource"
+            :class="[
+              'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap',
+              jobSource === 'teamtailor' 
+                ? 'bg-purple-100 text-purple-800 border border-purple-200' 
+                : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+            ]"
           >
-            {{ job.title }}
-          </a>
-        </h3>
+            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path v-if="jobSource === 'teamtailor'" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"/>
+              <path v-else d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+              <path v-else d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+            </svg>
+            {{ jobSource === 'teamtailor' ? 'TeamTailor' : 'Platsbanken' }}
+          </span>
+        </div>
 
         <!-- Company and Location -->
         <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3">
@@ -126,10 +144,14 @@ import { ref, computed } from 'vue'
 import type { SimpleJob } from '../types/platsbanken'
 
 interface Props {
-  job: SimpleJob
+  job: SimpleJob & { source?: string }
 }
 
 const props = defineProps<Props>()
+
+const jobSource = computed(() => {
+  return (props.job as any).source || null
+})
 
 const expanded = ref(false)
 
