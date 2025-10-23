@@ -112,19 +112,23 @@ Allt fungerar! Du kan nu:
 8. **Email alerts** - Skicka dagliga jobb som matchar användaren
 9. **Application tracking** - Spara vilka jobb användaren har ansökt till
 
-## 📊 Nuvarande Status
+## 📊 Nuvarande Status - MEGA UPDATE! 🚀
 
-- ✅ **120 jobb från TeamTailor** (från 9 företag!)
+- ✅ **356 jobb från TeamTailor** (från 40+ företag!) 🔥
+  - H2 Green Steel (78 jobb)
   - Epidemic Sound (37 jobb)
   - Kry (34 jobb)
+  - Doktor.se (27 jobb)
   - Teamtailor (20 jobb)
-  - Soundtrack Your Brand (10 jobb)
-  - Happy Socks, Funnel, BookBeat, Karma, Fishbrain
+  - Oatly (17 jobb)
+  - Lunar (11 jobb)
+  - Nudie Jeans, Qred, Sitoo, Bambuser, Atlar, Normative, och 20+ fler!
 - ✅ **~100 jobb från Platsbanken**
-- ✅ **~220 jobb totalt!** 🎉
+- ✅ **~456 jobb totalt!** 🎉🎉🎉 (380% ökning från start!)
 - ✅ **Unified search fungerar**
 - ✅ **30 min cache** (för att inte spamma RSS-feeds)
 - ✅ **Auto-discovery script** för att hitta fler företag
+- ✅ **180+ företag testade** i senaste discovery-run!
 
 ---
 

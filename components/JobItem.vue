@@ -1,7 +1,7 @@
 <template>
   <div class="job-container" :class="{ 'expanded': isExpanded, 'contracting': isContracting }" :style="jobStyle">
     <div class="inner-div"></div>
-    <div class="top-left-box" :style="topLeftBoxStyle">
+    <div class="top-left-box clickable" :style="topLeftBoxStyle" @click="toggleExpanded" title="Klicka för att visa mer">
       <div class="inner-top-left-bar" :style="innerTopLeftBarStyle"></div>
       <div class="inner-text">
         <h3 class="job-title">{{ job.title }}</h3>
@@ -303,14 +303,26 @@ const regeneratePersonalLetter = async () => {
 }
 
 const formattedDescription = computed(() => {
-  if (!props.job.description) return 'Ingen beskrivning tillgänglig.'
+  if (!props.job.description) return '<p>Ingen beskrivning tillgänglig.</p>'
   
-  // Basic HTML formatting for job descriptions
-  return props.job.description
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/\n/g, '<br>')
-    .replace(/^/, '<p>')
-    .replace(/$/, '</p>')
+  // Format description with proper paragraphs and line breaks
+  let desc = props.job.description
+  
+  // Escape any remaining HTML to prevent XSS
+  desc = desc
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+  
+  // Convert text formatting to HTML
+  return desc
+    .split('\n\n')  // Split on double newlines for paragraphs
+    .filter(para => para.trim())  // Remove empty paragraphs
+    .map(para => {
+      // Convert single newlines to <br> within paragraphs
+      const formatted = para.replace(/\n/g, '<br>')
+      return `<p>${formatted}</p>`
+    })
+    .join('')
 })
 
 
@@ -552,23 +564,34 @@ function formatDate(dateString?: string): string {
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   color: #666;
-  line-height: 1.4;
-  max-height: 300px;
+  line-height: 1.6;
+  max-height: 400px;
   overflow-y: auto;
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-word;
   max-width: 100%;
   background-color: white;
-  padding: 12px;
+  padding: 16px;
   border-radius: 4px;
   border: 1px solid #e8e8e8;
+  white-space: normal;
 }
 
 .job-description p {
-  margin: 0 0 8px 0;
+  margin: 0 0 12px 0;
   max-width: 100%;
   overflow-wrap: break-word;
+  line-height: 1.6;
+}
+
+.job-description p:last-child {
+  margin-bottom: 0;
+}
+
+/* Style bullet points */
+.job-description p:has(br) {
+  margin-bottom: 8px;
 }
 
 /* Action Buttons in Expanded State */
@@ -673,6 +696,25 @@ function formatDate(dateString?: string): string {
   color: #000000;
   margin: 1px;
   margin-top: 4rem;
+}
+
+/* Clickable top-left-box */
+.top-left-box.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.top-left-box.clickable:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.top-left-box.clickable:hover .inner-top-left-bar {
+  background-color: #0d3d2f;
+}
+
+.top-left-box.clickable:active {
+  transform: translateY(0);
 }
 
 .employer-text {

@@ -163,10 +163,10 @@
 
       <!-- Job Results -->
       <div v-if="loading" class="loading-message">
-        Laddar jobb...
+        Laddar jobb från Platsbanken...
       </div>
       
-      <div v-else-if="displayJobs.length === 0" class="no-jobs-message">
+      <div v-else-if="displayJobs.length === 0 && !teamtailorLoading" class="no-jobs-message">
         Inga jobb hittades med de valda filtren.
       </div>
       
@@ -181,8 +181,14 @@
           @toggle-favorite="toggleFavorite(job)"
         />
         
+        <!-- TeamTailor Loading Indicator -->
+        <div v-if="teamtailorLoading" class="teamtailor-loading">
+          <div class="loading-spinner"></div>
+          <span>Laddar jobb från TeamTailor...</span>
+        </div>
+        
         <!-- Load More Button -->
-        <div v-if="hasMoreJobs" class="load-more-container">
+        <div v-if="hasMoreJobs && teamtailorLoaded" class="load-more-container">
           <button @click="loadMoreJobs" :disabled="loading" class="load-more-btn">
             <span v-if="loading">Laddar...</span>
             <span v-else>Ladda fler jobb ({{ remainingJobs }} kvar)</span>
@@ -494,11 +500,17 @@ const remainingJobs = computed(() => {
   return totalJobs.value - jobs.value.length
 })
 
-// API functions
+// Progressive loading state
+const teamtailorLoading = ref(false)
+const teamtailorLoaded = ref(false)
+
+// API functions - Progressive loading: Platsbanken first, then TeamTailor
 const fetchJobs = async (append = false) => {
   if (loading.value) return
   
   loading.value = true
+  teamtailorLoaded.value = false
+  let platsbankenTotal = 0
   
   try {
     const params = new URLSearchParams()
@@ -521,24 +533,75 @@ const fetchJobs = async (append = false) => {
       params.append('employment-type', currentFilters.value.workTimeExtent)
     }
     
-    // Add source parameter
-    params.append('source', currentSource.value)
+    // Check which sources to fetch
+    const shouldFetchPlatsbanken = currentSource.value === 'all' || currentSource.value === 'platsbanken'
+    const shouldFetchTeamtailor = currentSource.value === 'all' || currentSource.value === 'teamtailor'
     
-    const response = await $fetch(`/api/jobs/combined?${params.toString()}`)
-    
-    if (response.success) {
-      if (append) {
-        jobs.value.push(...response.data.jobs)
-      } else {
-        jobs.value = response.data.jobs
-        currentOffset.value = 0
+    // STEP 1: Fetch Platsbanken first (fast)
+    if (shouldFetchPlatsbanken) {
+      const platsbankenParams = new URLSearchParams(params)
+      platsbankenParams.append('source', 'platsbanken')
+      
+      const platsbankenResponse = await $fetch(`/api/jobs/combined?${platsbankenParams.toString()}`)
+      
+      if (platsbankenResponse.success) {
+        if (append) {
+          jobs.value.push(...platsbankenResponse.data.jobs)
+        } else {
+          jobs.value = platsbankenResponse.data.jobs
+          currentOffset.value = 0
+        }
+        platsbankenTotal = platsbankenResponse.data.total
+        totalJobs.value = platsbankenTotal
       }
-      totalJobs.value = response.data.total
-      currentOffset.value = response.data.offset + response.data.jobs.length
+    } else {
+      // If not fetching platsbanken, reset jobs
+      if (!append) {
+        jobs.value = []
+        currentOffset.value = 0
+        totalJobs.value = 0
+      }
     }
+    
+    loading.value = false
+    
+    // STEP 2: Fetch TeamTailor in background (slower)
+    if (shouldFetchTeamtailor) {
+      teamtailorLoading.value = true
+      
+      const teamtailorParams = new URLSearchParams(params)
+      teamtailorParams.append('source', 'teamtailor')
+      
+      try {
+        const teamtailorResponse = await $fetch(`/api/jobs/combined?${teamtailorParams.toString()}`)
+        
+        if (teamtailorResponse.success) {
+          // Merge TeamTailor jobs with existing jobs
+          const existingIds = new Set(jobs.value.map(j => j.id))
+          const newJobs = teamtailorResponse.data.jobs.filter((j: SimpleJob) => !existingIds.has(j.id))
+          
+          jobs.value.push(...newJobs)
+          totalJobs.value = platsbankenTotal + teamtailorResponse.data.total
+          
+          // Sort by publication date (newest first)
+          jobs.value.sort((a, b) => {
+            const dateA = new Date(a.publicationDate).getTime()
+            const dateB = new Date(b.publicationDate).getTime()
+            return dateB - dateA
+          })
+        }
+      } catch (error) {
+        console.error('Error fetching TeamTailor jobs:', error)
+      } finally {
+        teamtailorLoading.value = false
+        teamtailorLoaded.value = true
+      }
+    } else {
+      teamtailorLoaded.value = true
+    }
+    
   } catch (error) {
     console.error('Error fetching jobs:', error)
-  } finally {
     loading.value = false
   }
 }
@@ -1013,6 +1076,67 @@ watch([searchTerm, currentFilters, currentSource], () => {
   margin: 20px 0;
   font-family: 'Inter', sans-serif;
   font-size: 16px;
+}
+
+.teamtailor-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  margin: 16px 0;
+  background-color: #f8f4ff;
+  border: 2px dashed #8b5cf6;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #6d28d9;
+  font-weight: 500;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #e9d5ff;
+  border-top-color: #8b5cf6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin: 24px 0;
+}
+
+.load-more-btn {
+  padding: 12px 32px;
+  background-color: #1D6453;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.load-more-btn:hover:not(:disabled) {
+  background-color: #155242;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(29, 100, 83, 0.2);
+}
+
+.load-more-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Mobile Menu */
