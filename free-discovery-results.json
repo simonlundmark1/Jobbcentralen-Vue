@@ -1,0 +1,662 @@
+{
+  "discoveredAt": "2025-10-28T15:11:19.117Z",
+  "method": "FREE - No API Keys",
+  "count": 131,
+  "companies": [
+    {
+      "name": "Teamtailor Dashboard",
+      "careerSiteUrl": "https://dashboard.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Teamtailor",
+      "careerSiteUrl": "https://career.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Teamtailor updates",
+      "careerSiteUrl": "https://updates.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "hello",
+      "careerSiteUrl": "https://hello.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Teamtailor API Documentation",
+      "careerSiteUrl": "https://partner.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "highlights",
+      "careerSiteUrl": "https://highlights.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Teamtailor™ – Nästa generationens ATS & Employer Branding",
+      "careerSiteUrl": "https://www.teamtailor.com/sv/",
+      "enabled": true
+    },
+    {
+      "name": "Sign In | Sentry",
+      "careerSiteUrl": "https://errors.teamtailor.com/auth/login/",
+      "enabled": true
+    },
+    {
+      "name": "Teamtailor™ – Nästa generationens ATS & Employer Branding",
+      "careerSiteUrl": "https://www.teamtailor.com/sv/",
+      "enabled": true
+    },
+    {
+      "name": "Teamtailor™ – Nästa generationens ATS & Employer Branding",
+      "careerSiteUrl": "https://www.teamtailor.com/sv/",
+      "enabled": true
+    },
+    {
+      "name": "Teamtailor™ – Nästa generationens ATS & Employer Branding",
+      "careerSiteUrl": "https://www.teamtailor.com/sv/",
+      "enabled": true
+    },
+    {
+      "name": "Teamtailor™ – Nästa generationens ATS & Employer Branding",
+      "careerSiteUrl": "https://www.teamtailor.com/sv/",
+      "enabled": true
+    },
+    {
+      "name": "analytics",
+      "careerSiteUrl": "https://analytics.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Instabee ",
+      "careerSiteUrl": "https://career.instabee.com/",
+      "enabled": true
+    },
+    {
+      "name": "Northvolt",
+      "careerSiteUrl": "https://northvolt.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Nordea",
+      "careerSiteUrl": "https://nordea.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "sbab.se",
+      "careerSiteUrl": "https://www.sbab.se/1/jobb/jobb.html?jobb=/",
+      "enabled": true
+    },
+    {
+      "name": "Klarna TEST",
+      "careerSiteUrl": "https://klarna.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "SEB ",
+      "careerSiteUrl": "https://seb.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Skandia",
+      "careerSiteUrl": "https://karriar.skandia.se/",
+      "enabled": true
+    },
+    {
+      "name": "Voi",
+      "careerSiteUrl": "https://voi.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "H&M",
+      "careerSiteUrl": "https://hm.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "IKEA",
+      "careerSiteUrl": "https://ikea.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Spotify",
+      "careerSiteUrl": "https://spotify.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Truecaller",
+      "careerSiteUrl": "https://truecaller.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Paradox",
+      "careerSiteUrl": "https://paradox.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Swedbank",
+      "careerSiteUrl": "https://swedbank.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "IF",
+      "careerSiteUrl": "https://if.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Coop",
+      "careerSiteUrl": "https://coop.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "City Gross",
+      "careerSiteUrl": "https://citygross.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Handelsbanken",
+      "careerSiteUrl": "https://handelsbanken.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "ica",
+      "careerSiteUrl": "https://ica.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Systembolaget",
+      "careerSiteUrl": "https://systembolaget.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Inet",
+      "careerSiteUrl": "https://karriar.inet.se/",
+      "enabled": true
+    },
+    {
+      "name": "XXL",
+      "careerSiteUrl": "https://xxl.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Elgiganten",
+      "careerSiteUrl": "https://elgiganten.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Axfood",
+      "careerSiteUrl": "https://axfood.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Boozt ",
+      "careerSiteUrl": "https://boozt.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Webhallen",
+      "careerSiteUrl": "https://webhallen.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Nelly",
+      "careerSiteUrl": "https://nelly.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Dustin",
+      "careerSiteUrl": "https://dustin.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Stadium",
+      "careerSiteUrl": "https://stadium.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Volvo",
+      "careerSiteUrl": "https://volvo.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Scania",
+      "careerSiteUrl": "https://scania.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Sandvik",
+      "careerSiteUrl": "https://sandvik.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "ABB",
+      "careerSiteUrl": "https://abb.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "SKF",
+      "careerSiteUrl": "https://skf.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Saab",
+      "careerSiteUrl": "https://saab.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "NA-KD ",
+      "careerSiteUrl": "https://nakd.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Husqvarna",
+      "careerSiteUrl": "https://husqvarna.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Elekta",
+      "careerSiteUrl": "https://elekta.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Getinge",
+      "careerSiteUrl": "https://getinge.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Ericsson",
+      "careerSiteUrl": "https://ericsson.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Tre",
+      "careerSiteUrl": "https://tre.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "HiQ",
+      "careerSiteUrl": "https://career.hiq.se/",
+      "enabled": true
+    },
+    {
+      "name": "Accenture ",
+      "careerSiteUrl": "https://accenture.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Sr",
+      "careerSiteUrl": "https://sr.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "SVT",
+      "careerSiteUrl": "https://svt.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Deloitte",
+      "careerSiteUrl": "https://deloitte.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Capgemini",
+      "careerSiteUrl": "https://capgemini.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "EY",
+      "careerSiteUrl": "https://ey.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Pwc Sverige",
+      "careerSiteUrl": "https://pwc.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "KPMG",
+      "careerSiteUrl": "https://kpmg.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Doktor.se",
+      "careerSiteUrl": "https://jobs.doktor.se/",
+      "enabled": true
+    },
+    {
+      "name": "Oatly AB",
+      "careerSiteUrl": "https://careers.oatly.com/",
+      "enabled": true
+    },
+    {
+      "name": "Karma",
+      "careerSiteUrl": "https://careers.karma.life/",
+      "enabled": true
+    },
+    {
+      "name": "Matsmart-Motatos",
+      "careerSiteUrl": "https://people.matsmart.se/",
+      "enabled": true
+    },
+    {
+      "name": "Mathem",
+      "careerSiteUrl": "https://karriar.mathem.se/",
+      "enabled": true
+    },
+    {
+      "name": "Jayway",
+      "careerSiteUrl": "https://jayway.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Praktikertjänst",
+      "careerSiteUrl": "https://praktikertjanst.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Fjällräven",
+      "careerSiteUrl": "https://career.fjallraven.com/",
+      "enabled": true
+    },
+    {
+      "name": "Hemnet",
+      "careerSiteUrl": "https://career.hemnet.se/",
+      "enabled": true
+    },
+    {
+      "name": "Qasa",
+      "careerSiteUrl": "https://careers.qasa.se/",
+      "enabled": true
+    },
+    {
+      "name": "Mäklarhuset",
+      "careerSiteUrl": "https://jobb.maklarhuset.se/",
+      "enabled": true
+    },
+    {
+      "name": "Stegra",
+      "careerSiteUrl": "https://career.stegra.com/",
+      "enabled": true
+    },
+    {
+      "name": "Tibber",
+      "careerSiteUrl": "https://jobs.tibber.com/",
+      "enabled": true
+    },
+    {
+      "name": "craft",
+      "careerSiteUrl": "https://craft.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Casall",
+      "careerSiteUrl": "https://casall.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Greenely",
+      "careerSiteUrl": "https://careers.greenely.se/",
+      "enabled": true
+    },
+    {
+      "name": "Normative",
+      "careerSiteUrl": "https://careers.normative.io/",
+      "enabled": true
+    },
+    {
+      "name": "Samtrygg",
+      "careerSiteUrl": "https://samtrygg.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Climeon",
+      "careerSiteUrl": "https://career.climeon.com/",
+      "enabled": true
+    },
+    {
+      "name": "Paradox Interactive",
+      "careerSiteUrl": "https://career.paradoxplaza.com/",
+      "enabled": true
+    },
+    {
+      "name": "Sharkmob ",
+      "careerSiteUrl": "https://career.sharkmob.com/",
+      "enabled": true
+    },
+    {
+      "name": "Starbreeze",
+      "careerSiteUrl": "https://jobs.starbreeze.com/",
+      "enabled": true
+    },
+    {
+      "name": "Aira",
+      "careerSiteUrl": "https://aira.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Flower",
+      "careerSiteUrl": "https://flower.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Ferroamp",
+      "careerSiteUrl": "https://ferroamp.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Instabee ",
+      "careerSiteUrl": "https://career.instabee.com/",
+      "enabled": true
+    },
+    {
+      "name": "Instabee ",
+      "careerSiteUrl": "https://career.instabee.com/",
+      "enabled": true
+    },
+    {
+      "name": "Qasa",
+      "careerSiteUrl": "https://careers.qasa.se/",
+      "enabled": true
+    },
+    {
+      "name": "Samtrygg",
+      "careerSiteUrl": "https://samtrygg.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "DHL",
+      "careerSiteUrl": "https://dhl.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "UPS",
+      "careerSiteUrl": "https://ups.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Schenker",
+      "careerSiteUrl": "https://schenker.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Bring",
+      "careerSiteUrl": "https://bring.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "foodora",
+      "careerSiteUrl": "https://foodora.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Wolt",
+      "careerSiteUrl": "https://wolt.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Uber",
+      "careerSiteUrl": "https://uber.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "AcadeMedia",
+      "careerSiteUrl": "https://academedia.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Scandic",
+      "careerSiteUrl": "https://scandic.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "jensen",
+      "careerSiteUrl": "https://jensen.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Nackademin",
+      "careerSiteUrl": "https://nackademin.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Benifex",
+      "careerSiteUrl": "https://careers.benifex.com/",
+      "enabled": true
+    },
+    {
+      "name": "Team Tailor",
+      "careerSiteUrl": "https://teamtailor.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "TNG",
+      "careerSiteUrl": "https://tng.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Adecco ",
+      "careerSiteUrl": "https://adecco.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Clavister",
+      "careerSiteUrl": "https://careers.clavister.com/",
+      "enabled": true
+    },
+    {
+      "name": "Epidemic Sound",
+      "careerSiteUrl": "https://careers.epidemicsound.com/",
+      "enabled": true
+    },
+    {
+      "name": "Funnel",
+      "careerSiteUrl": "https://jobs.funnel.io/",
+      "enabled": true
+    },
+    {
+      "name": "manpower",
+      "careerSiteUrl": "https://manpower.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Fishbrain",
+      "careerSiteUrl": "https://careers.fishbrain.com/",
+      "enabled": true
+    },
+    {
+      "name": "Randstad",
+      "careerSiteUrl": "https://randstad.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Lunar",
+      "careerSiteUrl": "https://jobs.lunar.app/",
+      "enabled": true
+    },
+    {
+      "name": "Anyfin",
+      "careerSiteUrl": "https://career.anyfin.com/",
+      "enabled": true
+    },
+    {
+      "name": "Sectra ",
+      "careerSiteUrl": "https://sectra.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Insurello",
+      "careerSiteUrl": "https://careers.insurello.se/",
+      "enabled": true
+    },
+    {
+      "name": "Poolia",
+      "careerSiteUrl": "https://poolia.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Bambuser",
+      "careerSiteUrl": "https://bambuser.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Billogram",
+      "careerSiteUrl": "https://career.billogram.com/",
+      "enabled": true
+    },
+    {
+      "name": "Mentimeter",
+      "careerSiteUrl": "https://mentimeter.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Qred Bank AB",
+      "careerSiteUrl": "https://jobs.qred.com/",
+      "enabled": true
+    },
+    {
+      "name": "Estrid  ",
+      "careerSiteUrl": "https://join.estrid.com/",
+      "enabled": true
+    },
+    {
+      "name": "Upsales",
+      "careerSiteUrl": "https://upsales.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "BookBeat",
+      "careerSiteUrl": "https://jobs.bookbeat.com/",
+      "enabled": true
+    },
+    {
+      "name": "Quinyx",
+      "careerSiteUrl": "https://careers.quinyx.com/",
+      "enabled": true
+    },
+    {
+      "name": "Hedvig",
+      "careerSiteUrl": "https://hedvig.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Bokio",
+      "careerSiteUrl": "https://jobs.bokio.se/",
+      "enabled": true
+    },
+    {
+      "name": "Tacton",
+      "careerSiteUrl": "https://careers.tacton.com/",
+      "enabled": true
+    },
+    {
+      "name": "Acast",
+      "careerSiteUrl": "https://acast.teamtailor.com/",
+      "enabled": true
+    },
+    {
+      "name": "Truesec",
+      "careerSiteUrl": "https://www.truesec.com/career",
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+[
+  {
+    "name": "Northvolt",
+    "domain": "northvolt.com",
+    "slug": "northvolt",
+    "category": "Green Tech"
+  },
+  {
+    "name": "Einride",
+    "domain": "einride.tech",
+    "slug": "einride",
+    "category": "Green Tech"
+  },
+  {
+    "name": "Voi Technology",
+    "domain": "voiscooters.com",
+    "slug": "voi",
+    "category": "Mobility"
+  },
+  {
+    "name": "Truecaller",
+    "domain": "truecaller.com",
+    "slug": "truecaller",
+    "category": "Tech"
+  },
+  {
+    "name": "Urbanears",
+    "domain": "urbanears.com",
+    "slug": "urbanears",
+    "category": "Consumer Electronics"
+  },
+  {
+    "name": "Sinch",
+    "domain": "sinch.com",
+    "slug": "sinch",
+    "category": "Tech"
+  },
+  {
+    "name": "Mentimeter",
+    "domain": "mentimeter.com",
+    "slug": "mentimeter",
+    "category": "EdTech"
+  },
+  {
+    "name": "Min Doktor",
+    "domain": "mindoktor.se",
+    "slug": "mindoktor",
+    "category": "HealthTech"
+  },
+  {
+    "name": "Capio",
+    "domain": "capio.se",
+    "slug": "capio",
+    "category": "Healthcare"
+  },
+  {
+    "name": "Allbright",
+    "domain": "allbright.co",
+    "slug": "allbright",
+    "category": "Coworking"
+  },
+  {
+    "name": "Epidemic Sound",
+    "domain": "epidemicsound.com",
+    "slug": "epidemicsound",
+    "category": "Music Tech",
+    "verified": true
+  },
+  {
+    "name": "Natural Cycles",
+    "domain": "naturalcycles.com",
+    "slug": "naturalcycles",
+    "category": "FemTech"
+  },
+  {
+    "name": "Budbee",
+    "domain": "budbee.com",
+    "slug": "budbee",
+    "category": "Logistics"
+  },
+  {
+    "name": "Mathem",
+    "domain": "mathem.se",
+    "slug": "mathem",
+    "category": "E-commerce"
+  },
+  {
+    "name": "Oda",
+    "domain": "oda.com",
+    "slug": "oda",
+    "category": "E-commerce"
+  },
+  {
+    "name": "Foodora",
+    "domain": "foodora.se",
+    "slug": "foodora",
+    "category": "Food Delivery"
+  },
+  {
+    "name": "Wolt",
+    "domain": "wolt.com",
+    "slug": "wolt",
+    "category": "Food Delivery"
+  }
+]
