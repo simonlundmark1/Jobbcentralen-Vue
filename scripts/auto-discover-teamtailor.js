@@ -1,219 +1,440 @@
-/**
- * AUTO-DISCOVERY: Hitta TeamTailor-företag automatiskt
- * 
- * Strategier:
- * 1. Crawla välkända företagslistor (LinkedIn, Allabolag, etc.)
- * 2. Testa vanliga patterns för karriärsidor
- * 3. Google Custom Search API
- * 4. RSS feed pattern matching
- */
+import https from 'https';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-import fetch from 'node-fetch'
-import * as fs from 'fs'
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// ===== KÄLLOR FÖR FÖRETAGSNAMN =====
-
-const SWEDISH_TECH_SOURCES = {
-  // Från Stockholm Tech Meetup, Nordic Startup School, etc.
-  startupLists: [
-    'https://raw.githubusercontent.com/johanbrook/swedish-startups/master/startups.json',
-  ],
-  
-  // DI Digital, Breakit, etc. companies
-  manualSeed: [
-    'Spotify', 'Klarna', 'Voi', 'Tink', 'Einride', 'Northvolt', 'Truecaller',
-    'Axel Johnson', 'ICA', 'Coop', 'Systembolaget', 'Vattenfall', 'Telia',
-    'PostNord', 'SEB', 'Handelsbanken', 'Swedbank', 'Nordea', 'H&M', 'IKEA'
-  ]
-}
-
-// ===== TEAMTAILOR PATTERNS =====
-
-const PATTERNS = {
-  // RSS feed patterns
-  rssFeedPatterns: [
-    'https://{domain}/jobs.rss',
-    'https://careers.{domain}/jobs.rss',
-    'https://jobs.{domain}/jobs.rss',
-    'https://career.{domain}/jobs.rss',
-    'https://work.{domain}/jobs.rss',
-    'https://join.{domain}/jobs.rss',
-    'https://{slug}.teamtailor.com/jobs.rss',
-    'https://{slug}.career.teamtailor.com/jobs.rss',
-  ],
-  
-  // Career page patterns (non-RSS)
-  careerPagePatterns: [
-    'https://{domain}/jobs',
-    'https://{domain}/karriar',
-    'https://{domain}/career',
-    'https://careers.{domain}',
-    'https://jobs.{domain}',
-  ]
-}
-
-// ===== HELPER FUNCTIONS =====
-
-async function testURL(url, timeout = 5000) {
-  try {
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), timeout)
+// HTTPS-förfrågan
+function httpsGet(url, headers = {}) {
+  return new Promise((resolve, reject) => {
+    const defaultHeaders = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      ...headers
+    };
     
-    const response = await fetch(url, {
-      method: 'HEAD',
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; JobbcentralenBot/1.0)' },
-      signal: controller.signal,
-      redirect: 'follow'
-    })
-    
-    clearTimeout(timeoutId)
-    return { success: response.ok, status: response.status, url: response.url }
-  } catch (error) {
-    return { success: false, error: error.message }
-  }
-}
-
-async function testRSSFeed(url) {
-  try {
-    const response = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; JobbcentralenBot/1.0)' }
-    })
-    
-    if (!response.ok) return false
-    
-    const text = await response.text()
-    
-    // Check if it's a valid RSS feed with TeamTailor signature
-    const isRSS = text.includes('<rss') || text.includes('<feed')
-    const isTeamTailor = text.includes('teamtailor') || text.includes('Teamtailor')
-    
-    return isRSS && (isTeamTailor || text.includes('<item>'))
-  } catch (error) {
-    return false
-  }
-}
-
-// ===== DISCOVERY STRATEGIES =====
-
-async function discoverFromCompanyList(companies) {
-  console.log(`\n🔍 Testing ${companies.length} companies...`)
-  const results = []
-  
-  for (const company of companies) {
-    const domain = company.domain || `${company.name.toLowerCase().replace(/\s+/g, '')}.se`
-    const slug = company.slug || company.name.toLowerCase().replace(/\s+/g, '-')
-    
-    console.log(`\nTesting: ${company.name}`)
-    
-    // Test all RSS patterns
-    for (const pattern of PATTERNS.rssFeedPatterns) {
-      const url = pattern
-        .replace('{domain}', domain)
-        .replace('{slug}', slug)
+    https.get(url, { headers: defaultHeaders, timeout: 10000 }, (res) => {
+      let data = '';
       
-      const isValid = await testRSSFeed(url)
+      // Följ redirects
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        return httpsGet(res.headers.location, headers).then(resolve).catch(reject);
+      }
       
-      if (isValid) {
-        console.log(`  ✅ Found RSS: ${url}`)
-        results.push({
-          name: company.name,
-          careerSiteUrl: url.replace('/jobs.rss', ''),
-          rssUrl: url,
-          enabled: true
-        })
-        break // Found one, skip rest
+      res.on('data', (chunk) => data += chunk);
+      res.on('end', () => resolve({ data, statusCode: res.statusCode, headers: res.headers }));
+    }).on('error', reject).on('timeout', () => reject(new Error('Timeout')));
+  });
+}
+
+// Metod 1: Scrapa TeamTailor's kund-showcase sida
+async function scrapeTeamtailorShowcase() {
+  console.log('📋 Metod 1: Scrapar TeamTailor showcase...');
+  const companies = new Set();
+  
+  try {
+    // TeamTailor visar ofta sina kunder på sin webbplats
+    const urls = [
+      'https://www.teamtailor.com/customers',
+      'https://www.teamtailor.com/sv/customers',
+      'https://www.teamtailor.com/case-studies'
+    ];
+    
+    for (const url of urls) {
+      try {
+        const response = await httpsGet(url);
+        const html = response.data;
+        
+        // Hitta alla *.teamtailor.com länkar
+        const regex = /https?:\/\/([a-z0-9-]+)\.teamtailor\.com/gi;
+        const matches = html.matchAll(regex);
+        
+        for (const match of matches) {
+          const subdomain = match[1];
+          if (subdomain && !['www', 'app', 'dashboard', 'api'].includes(subdomain)) {
+            companies.add(`https://${subdomain}.teamtailor.com/`);
+          }
+        }
+      } catch (e) {
+        // Fortsätt om en URL misslyckas
       }
     }
-    
-    // Small delay to avoid rate limiting
-    await new Promise(resolve => setTimeout(resolve, 100))
+  } catch (error) {
+    console.log('  ⚠️  Showcase scraping misslyckades');
   }
   
-  return results
+  console.log(`  ✅ Hittade ${companies.size} företag från showcase`);
+  return Array.from(companies);
 }
 
-async function googleSearch(query) {
-  // TODO: Implement Google Custom Search API
-  // Requires API key: https://developers.google.com/custom-search/v1/overview
-  console.log(`\n🔍 Google search: "${query}"`)
-  console.log('⚠️  Google API not implemented yet')
-  return []
+// Metod 2: Hitta via DNS enumeration av teamtailor.com subdomäner
+async function enumerateSubdomains() {
+  console.log('\n🔍 Metod 2: Enumererar teamtailor.com subdomäner...');
+  const companies = new Set();
+  
+  // Vanliga svenska företagsnamn att testa
+  const commonCompanies = [
+    // Alla branscher
+    'klarna', 'spotify', 'northvolt', 'volvo', 'scania', 'ericsson', 
+    'ikea', 'hm', 'coop', 'ica', 'stadium', 'xxl',
+    'seb', 'swedbank', 'nordea', 'handelsbanken', 'sbab',
+    'truecaller', 'king', 'mojang', 'paradox', 'sharkmob',
+    'tink', 'lunar', 'anyfin', 'klarna', 'izettle',
+    'hemnet', 'blocket', 'qasa', 'samtrygg',
+    'mathem', 'karma', 'matsmart', 'oatly',
+    'budbee', 'instabox', 'instabee', 'foodora', 'wolt',
+    'kry', 'doktor', 'mindler', 'praktikertjanst',
+    'telia', 'tre', 'telenor', 'comviq',
+    'svt', 'sr', 'tv4', 'mtr', 'sj'
+  ];
+  
+  // Testa subdomäner
+  for (const company of commonCompanies) {
+    const url = `https://${company}.teamtailor.com/`;
+    try {
+      const response = await httpsGet(url);
+      if (response.statusCode === 200) {
+        companies.add(url);
+        console.log(`  ✅ ${company}.teamtailor.com`);
+      }
+    } catch (e) {
+      // Skip
+    }
+    await new Promise(r => setTimeout(r, 100));
+  }
+  
+  console.log(`  ✅ Hittade ${companies.size} subdomäner`);
+  return Array.from(companies);
 }
 
-// ===== MAIN DISCOVERY FUNCTION =====
-
-async function autoDiscover() {
-  console.log('🚀 Starting TeamTailor Auto-Discovery...\n')
+// Metod 3: Sök efter "powered by teamtailor" via Google (via API om tillgängligt)
+async function searchViaWebArchive() {
+  console.log('\n🌐 Metod 3: Söker via Common Crawl index...');
+  const companies = new Set();
   
-  const allDiscovered = []
-  
-  // Strategy 1: Test manual seed list
-  console.log('📋 Strategy 1: Manual seed companies')
-  const manualResults = await discoverFromCompanyList(
-    SWEDISH_TECH_SOURCES.manualSeed.map(name => ({ name }))
-  )
-  allDiscovered.push(...manualResults)
-  
-  // Strategy 2: Fetch from GitHub lists
-  console.log('\n📋 Strategy 2: Fetching from GitHub startup lists')
   try {
-    const response = await fetch(SWEDISH_TECH_SOURCES.startupLists[0])
-    if (response.ok) {
-      const startups = await response.json()
-      const results = await discoverFromCompanyList(startups)
-      allDiscovered.push(...results)
+    // Common Crawl har en index av alla crawlade domäner
+    // Vi kan söka efter *.teamtailor.com
+    const url = 'https://index.commoncrawl.org/CC-MAIN-2024-10-index?url=*.teamtailor.com/*&output=json';
+    
+    const response = await httpsGet(url);
+    const lines = response.data.split('\n').filter(l => l.trim());
+    
+    lines.forEach(line => {
+      try {
+        const data = JSON.parse(line);
+        const urlMatch = data.url?.match(/https?:\/\/([a-z0-9-]+)\.teamtailor\.com/i);
+        if (urlMatch) {
+          const subdomain = urlMatch[1];
+          if (subdomain && !['www', 'app', 'dashboard', 'api'].includes(subdomain)) {
+            companies.add(`https://${subdomain}.teamtailor.com/`);
+          }
+        }
+      } catch (e) {
+        // Skip invalid JSON
+      }
+    });
+  } catch (error) {
+    console.log('  ⚠️  Common Crawl search misslyckades');
+  }
+  
+  console.log(`  ✅ Hittade ${companies.size} företag från Common Crawl`);
+  return Array.from(companies);
+}
+
+// Metod 4: Hitta custom domains via TeamTailor's RSS detector
+async function findCustomDomains() {
+  console.log('\n🔍 Metod 4: Letar efter custom domains...');
+  const companies = new Set();
+  
+  // Expanderad lista med svenska företag och organisationer
+  const potentialCustomDomains = [
+    // Tech & Startups
+    'soundtrack', 'epidemic-sound', 'einride', 'northvolt', 'polestar',
+    'klarna', 'spotify', 'minecraft', 'king', 'mojang',
+    'truecaller', 'fishbrain', 'mentimeter', 'whereby', 'superside',
+    'tink', 'lunar', 'anyfin', 'trustly', 'izettle', 'zettle',
+    'bambuser', 'sinch', 'cellavision', 'qlik', 'cision',
+    // E-commerce & Retail
+    'nelly', 'nakd', 'bubbleroom', 'boozt', 'footway', 'qliro',
+    'sellpy', 'vestiaire', 'vinted', 'blocket', 'tradera',
+    // Health & Care
+    'kry', 'doktor', 'mindler', 'neko', 'doctrin',
+    'praktikertjanst', 'capio', 'aleris', 'varden',
+    'sveakbt', 'svea', 'ellyhealthgroup', 'elly',
+    // Proptech & Housing
+    'hemnet', 'qasa', 'samtrygg', 'bostadsportal', 'homepal',
+    'hyresbostader', 'bostad', 'akademiskahus',
+    // Transportation & Logistics
+    'budbee', 'instabox', 'instabee', 'urb-it', 'foodora', 'wolt',
+    'bolt', 'uber', 'voi', 'lime', 'tier',
+    // Food & Beverage
+    'mathem', 'karma', 'matsmart', 'oatly', 'sproud',
+    'lantmannen', 'arla', 'procordia', 'orkla',
+    // Manufacturing & Industry
+    'volvo', 'scania', 'polestar', 'koenigsegg',
+    'electrolux', 'husqvarna', 'abb', 'sandvik', 'skf', 'saab',
+    'atlas-copco', 'assa-abloy', 'getinge', 'elekta',
+    // Retail Chains
+    'ikea', 'hm', 'stadium', 'xxl', 'intersport', 'elgiganten',
+    'ica', 'coop', 'axfood', 'willys', 'hemkop', 'citygross',
+    'systembolaget', 'apoteket', 'kronans',
+    // Finance & Banking
+    'seb', 'swedbank', 'nordea', 'handelsbanken', 'sbab',
+    'lansforsakringar', 'folksam', 'if', 'trygg-hansa',
+    'avanza', 'nordnet', 'amex',
+    // Telecom & Media
+    'ericsson', 'nokia', 'telia', 'tre', 'telenor', 'comviq',
+    'svt', 'sr', 'tv4', 'bonnier', 'schibsted', 'aftonbladet', 'dn',
+    // Consulting & Services
+    'deloitte', 'pwc', 'kpmg', 'ey', 'accenture',
+    'bcg', 'mckinsey', 'bain', 'capgemini', 'hiq', 'knowit',
+    // Gaming
+    'paradox', 'sharkmob', 'starbreeze', 'embark', 'avalanche',
+    'coffee-stain', 'dice', 'massive',
+    // Energy & Environment
+    'vattenfall', 'fortum', 'eon', 'statkraft',
+    'northvolt', 'stegra', 'h2-green-steel',
+    'greenely', 'tibber', 'aira', 'eliq', 'flower',
+    // Public Sector (kan också använda TeamTailor)
+    'stockholm', 'goteborg', 'malmo', 'uppsala',
+    'regionstockholm', 'vgregion', 'skane',
+    'arbetsformedlingen', 'csn', 'skatteverket',
+    // Universities & Education
+    'kth', 'ki', 'su', 'uu', 'lu', 'gu', 'umu', 'ltu',
+    'academedia', 'jensen', 'nackademin', 'berghs',
+    // Hospitality & Hotels
+    'scandic', 'nordic-choice', 'elite', 'clarion',
+    // Fashion & Design
+    'acne', 'filippa-k', 'ganni', 'toteme', 'rodebjer',
+    // Other services
+    'manpower', 'adecco', 'randstad', 'academic-work',
+    'tng', 'poolia', 'teamtailor'
+  ];
+  
+  // Test olika URL patterns (svensk fokus med jobb.*/karriar.*)
+  for (const company of potentialCustomDomains) {
+    const urls = [
+      // Svenska patterns (mest vanliga först)
+      `https://jobb.${company}.se`,
+      `https://karriar.${company}.se`,
+      `https://karriär.${company}.se`,
+      `https://job.${company}.se`,
+      `https://jobs.${company}.se`,
+      `https://career.${company}.se`,
+      `https://careers.${company}.se`,
+      // Internationella
+      `https://career.${company}.com`,
+      `https://careers.${company}.com`, 
+      `https://jobs.${company}.com`,
+      `https://career.${company}.io`,
+      `https://careers.${company}.io`,
+      `https://jobs.${company}.io`,
+      // Nordiska varianter
+      `https://jobb.${company}.no`,
+      `https://jobb.${company}.dk`,
+      `https://jobb.${company}.fi`,
+      // Alternativa ändelser
+      `https://career.${company}.org`,
+      `https://jobs.${company}.org`
+    ];
+    
+    for (const url of urls) {
+      try {
+        // Testa om sidan använder TeamTailor genom att kolla RSS-feed
+        const rssUrl = url.endsWith('/') ? `${url}jobs.rss` : `${url}/jobs.rss`;
+        const response = await httpsGet(rssUrl);
+        
+        if (response.statusCode === 200 && response.data.includes('teamtailor')) {
+          companies.add(url + (url.endsWith('/') ? '' : '/'));
+          console.log(`  ✅ Hittade custom domain: ${url}`);
+        }
+      } catch (e) {
+        // Fortsätt
+      }
+      await new Promise(r => setTimeout(r, 200));
+    }
+  }
+  
+  console.log(`  ✅ Hittade ${companies.size} custom domains`);
+  return Array.from(companies);
+}
+
+// Metod 5: Hitta via sitemap och robots.txt
+async function findViaSitemap() {
+  console.log('\n🗺️  Metod 5: Kollar TeamTailor sitemap...');
+  const companies = new Set();
+  
+  try {
+    const sitemaps = [
+      'https://www.teamtailor.com/sitemap.xml',
+      'https://www.teamtailor.com/sitemap_index.xml'
+    ];
+    
+    for (const sitemapUrl of sitemaps) {
+      try {
+        const response = await httpsGet(sitemapUrl);
+        const xml = response.data;
+        
+        // Hitta alla URLs i sitemap
+        const urlRegex = /<loc>(.*?)<\/loc>/g;
+        const matches = xml.matchAll(urlRegex);
+        
+        for (const match of matches) {
+          const url = match[1];
+          // Kolla om URL:en refererar till ett kundcase eller liknande
+          if (url.includes('customer') || url.includes('case')) {
+            // Hämta sidan och leta efter länkar
+            try {
+              const pageResponse = await httpsGet(url);
+              const pageHtml = pageResponse.data;
+              
+              const companyRegex = /https?:\/\/([a-z0-9-]+)\.teamtailor\.com/gi;
+              const companyMatches = pageHtml.matchAll(companyRegex);
+              
+              for (const companyMatch of companyMatches) {
+                const subdomain = companyMatch[1];
+                if (subdomain && !['www', 'app', 'dashboard', 'api'].includes(subdomain)) {
+                  companies.add(`https://${subdomain}.teamtailor.com/`);
+                }
+              }
+            } catch (e) {
+              // Skip
+            }
+          }
+        }
+      } catch (e) {
+        // Skip
+      }
     }
   } catch (error) {
-    console.log('  ⚠️  Could not fetch GitHub list:', error.message)
+    console.log('  ⚠️  Sitemap search misslyckades');
   }
   
-  // Strategy 3: Google search for "teamtailor" + "Sweden"
-  // const googleResults = await googleSearch('site:teamtailor.com sweden jobs')
-  // allDiscovered.push(...googleResults)
-  
-  // Remove duplicates
-  const unique = []
-  const seen = new Set()
-  
-  for (const item of allDiscovered) {
-    if (!seen.has(item.careerSiteUrl)) {
-      seen.add(item.careerSiteUrl)
-      unique.push(item)
-    }
-  }
-  
-  // Sort by name
-  unique.sort((a, b) => a.name.localeCompare(b.name))
-  
-  // Save results
-  console.log(`\n✅ Discovered ${unique.length} new TeamTailor companies!`)
-  
-  const output = {
-    discoveredAt: new Date().toISOString(),
-    count: unique.length,
-    companies: unique
-  }
-  
-  fs.writeFileSync(
-    'discovered-teamtailor-companies.json',
-    JSON.stringify(output, null, 2)
-  )
-  
-  console.log('\n📁 Saved to: discovered-teamtailor-companies.json')
-  console.log('\n📋 Add these to server/utils/teamtailorCompanies.ts:')
-  console.log('─'.repeat(60))
-  
-  unique.forEach(company => {
-    console.log(`  {`)
-    console.log(`    name: '${company.name}',`)
-    console.log(`    careerSiteUrl: '${company.careerSiteUrl}',`)
-    console.log(`    enabled: true`)
-    console.log(`  },`)
-  })
-  
-  return unique
+  console.log(`  ✅ Hittade ${companies.size} företag från sitemap`);
+  return Array.from(companies);
 }
 
-// ===== RUN =====
+// Verifiera att företaget har aktiva jobb
+async function verifyCompany(url) {
+  try {
+    const rssUrl = url.endsWith('/') ? `${url}jobs.rss` : `${url}/jobs.rss`;
+    const response = await httpsGet(rssUrl);
+    
+    if (response.statusCode === 200 && response.data.includes('<item>')) {
+      // Räkna antal jobb
+      const jobMatches = response.data.match(/<item>/g);
+      const jobCount = jobMatches ? jobMatches.length : 0;
+      
+      // Hämta företagsnamn från RSS
+      const titleMatch = response.data.match(/<title>([^<]+)<\/title>/);
+      const name = titleMatch ? titleMatch[1].replace(' - Jobs', '').trim() : 'Unknown';
+      
+      return { url, rssUrl, name, jobCount, hasJobs: jobCount > 0 };
+    }
+  } catch (e) {
+    // Fortsätt
+  }
+  return null;
+}
 
-autoDiscover().catch(console.error)
+// Huvudfunktion
+async function main() {
+  console.log('🚀 Automatisk TeamTailor Discovery\n');
+  console.log('='.repeat(60));
+  
+  // Samla företag från alla metoder
+  const allUrls = new Set();
+  
+  // Kör alla discovery-metoder
+  const showcaseCompanies = await scrapeTeamtailorShowcase();
+  showcaseCompanies.forEach(url => allUrls.add(url));
+  
+  const subdomains = await enumerateSubdomains();
+  subdomains.forEach(url => allUrls.add(url));
+  
+  const webArchiveCompanies = await searchViaWebArchive();
+  webArchiveCompanies.forEach(url => allUrls.add(url));
+  
+  const customDomains = await findCustomDomains();
+  customDomains.forEach(url => allUrls.add(url));
+  
+  const sitemapCompanies = await findViaSitemap();
+  sitemapCompanies.forEach(url => allUrls.add(url));
+  
+  console.log('\n' + '='.repeat(60));
+  console.log(`📊 Totalt ${allUrls.size} unika URLs att verifiera\n`);
+  console.log('🔍 Verifierar att företagen har aktiva jobb...\n');
+  
+  // Verifiera alla företag
+  const verifiedCompanies = [];
+  let count = 0;
+  
+  for (const url of allUrls) {
+    count++;
+    console.log(`[${count}/${allUrls.size}] Kollar: ${url}`);
+    
+    const result = await verifyCompany(url);
+    if (result && result.hasJobs) {
+      verifiedCompanies.push({
+        name: result.name,
+        careerSiteUrl: result.url,
+        rssUrl: result.rssUrl,
+        jobCount: result.jobCount,
+        enabled: true
+      });
+      console.log(`  ✅ ${result.name} - ${result.jobCount} jobb\n`);
+    }
+    
+    // Rate limit
+    await new Promise(r => setTimeout(r, 500));
+  }
+  
+  // Sortera efter antal jobb (minst först)
+  verifiedCompanies.sort((a, b) => a.jobCount - b.jobCount);
+  
+  // Merge med befintliga
+  const existingPath = path.join(__dirname, '..', 'teamtailor-companies.json');
+  let existingCompanies = [];
+  
+  if (fs.existsSync(existingPath)) {
+    const existing = JSON.parse(fs.readFileSync(existingPath, 'utf8'));
+    existingCompanies = existing.companies || [];
+  }
+  
+  const allCompaniesMap = new Map();
+  existingCompanies.forEach(c => allCompaniesMap.set(c.careerSiteUrl, c));
+  verifiedCompanies.forEach(c => allCompaniesMap.set(c.careerSiteUrl, c));
+  
+  const finalCompanies = Array.from(allCompaniesMap.values());
+  finalCompanies.sort((a, b) => a.name.localeCompare(b.name, 'sv'));
+  
+  // Spara
+  const result = {
+    discoveredAt: new Date().toISOString(),
+    count: finalCompanies.length,
+    newCompaniesFound: verifiedCompanies.length,
+    companies: finalCompanies
+  };
+  
+  fs.writeFileSync(existingPath, JSON.stringify(result, null, 2), 'utf8');
+  
+  console.log('\n' + '='.repeat(60));
+  console.log('✅ KLART!');
+  console.log('='.repeat(60));
+  console.log(`📊 Totalt antal företag: ${finalCompanies.length}`);
+  console.log(`🆕 Nya företag: ${verifiedCompanies.length}`);
+  console.log(`💾 Sparat till: teamtailor-companies.json`);
+  
+  // Visa de 10 minsta
+  const smallest = verifiedCompanies.slice(0, 10);
+  if (smallest.length > 0) {
+    console.log('\n📌 Topp 10 minsta företag (mest intressanta):');
+    smallest.forEach((c, i) => {
+      console.log(`   ${i + 1}. ${c.name} - ${c.jobCount} jobb`);
+    });
+  }
+}
+
+main().catch(console.error);

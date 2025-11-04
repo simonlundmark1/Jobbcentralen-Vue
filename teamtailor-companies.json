@@ -1,0 +1,1619 @@
+{
+  "discoveredAt": "2025-11-03T09:58:12.989Z",
+  "count": 238,
+  "newCompaniesFound": 0,
+  "companies": [
+    {
+      "name": "2020 Levels",
+      "careerSiteUrl": "https://2020change.teamtailor.com/",
+      "rssUrl": "https://2020change.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "4OC",
+      "careerSiteUrl": "https://4oc.teamtailor.com/",
+      "rssUrl": "https://4oc.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "A-Lab",
+      "careerSiteUrl": "https://alab.teamtailor.com/",
+      "rssUrl": "https://alab.teamtailor.com/jobs.rss",
+      "jobCount": 7,
+      "enabled": true
+    },
+    {
+      "name": "AAF/Dinair",
+      "careerSiteUrl": "https://aafdinair.teamtailor.com/",
+      "rssUrl": "https://aafdinair.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Accrease",
+      "careerSiteUrl": "https://accrease.teamtailor.com/",
+      "rssUrl": "https://accrease.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "addpeople",
+      "careerSiteUrl": "https://addpeople.teamtailor.com/",
+      "rssUrl": "https://addpeople.teamtailor.com/jobs.rss",
+      "jobCount": 14,
+      "enabled": true
+    },
+    {
+      "name": "Adven Group",
+      "careerSiteUrl": "https://adven.teamtailor.com/",
+      "rssUrl": "https://adven.teamtailor.com/jobs.rss",
+      "jobCount": 9,
+      "enabled": true
+    },
+    {
+      "name": "Airshoppen Travel Retail",
+      "careerSiteUrl": "https://airshoppentravelretail.teamtailor.com/",
+      "rssUrl": "https://airshoppentravelretail.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Allente Nordic",
+      "careerSiteUrl": "https://allentenordic.teamtailor.com/",
+      "rssUrl": "https://allentenordic.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Amerikanska Gymnasiet",
+      "careerSiteUrl": "https://amerikanskagymnasiet.teamtailor.com/",
+      "rssUrl": "https://amerikanskagymnasiet.teamtailor.com/jobs.rss",
+      "jobCount": 13,
+      "enabled": true
+    },
+    {
+      "name": "Amesto Solutions",
+      "careerSiteUrl": "https://amestotechhouseas.teamtailor.com/",
+      "rssUrl": "https://amestotechhouseas.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Andara Economy",
+      "careerSiteUrl": "https://andaraeconomy.teamtailor.com/",
+      "rssUrl": "https://andaraeconomy.teamtailor.com/jobs.rss",
+      "jobCount": 7,
+      "enabled": true
+    },
+    {
+      "name": "Andara Professionals",
+      "careerSiteUrl": "https://andaraprofessionals.teamtailor.com/",
+      "rssUrl": "https://andaraprofessionals.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "AniCura Group",
+      "careerSiteUrl": "https://anicuraglobal.teamtailor.com/",
+      "rssUrl": "https://anicuraglobal.teamtailor.com/jobs.rss",
+      "jobCount": 100,
+      "enabled": true
+    },
+    {
+      "name": "Anyfin",
+      "careerSiteUrl": "https://career.anyfin.com/",
+      "rssUrl": "https://career.anyfin.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Armadillo CRM",
+      "careerSiteUrl": "https://armadillocrm.teamtailor.com/",
+      "rssUrl": "https://armadillocrm.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Ascom",
+      "careerSiteUrl": "https://ascom.teamtailor.com/",
+      "rssUrl": "https://ascom.teamtailor.com/jobs.rss",
+      "jobCount": 27,
+      "enabled": true
+    },
+    {
+      "name": "Athletic Work",
+      "careerSiteUrl": "https://athleticwork.teamtailor.com/",
+      "rssUrl": "https://athleticwork.teamtailor.com/jobs.rss",
+      "jobCount": 16,
+      "enabled": true
+    },
+    {
+      "name": "Attendo Sverige",
+      "careerSiteUrl": "https://attendosverige.teamtailor.com/",
+      "rssUrl": "https://attendosverige.teamtailor.com/jobs.rss",
+      "jobCount": 62,
+      "enabled": true
+    },
+    {
+      "name": "Atteviks",
+      "careerSiteUrl": "https://atteviks.teamtailor.com/",
+      "rssUrl": "https://atteviks.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Auranest",
+      "careerSiteUrl": "https://auranest.teamtailor.com/",
+      "rssUrl": "https://auranest.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Ava",
+      "careerSiteUrl": "https://ava.teamtailor.com/",
+      "rssUrl": "https://ava.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Available positions at Scania | Drive the change",
+      "careerSiteUrl": "https://jobs.scania.com/",
+      "rssUrl": "https://jobs.scania.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Axel Johnson",
+      "careerSiteUrl": "https://career.axeljohnson.se",
+      "rssUrl": "https://career.axeljohnson.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Bambuser",
+      "careerSiteUrl": "https://bambuser.teamtailor.com/",
+      "rssUrl": "https://bambuser.teamtailor.com/jobs.rss",
+      "jobCount": 7,
+      "enabled": true
+    },
+    {
+      "name": "Bankgirot",
+      "careerSiteUrl": "https://bankgirotab.teamtailor.com/",
+      "rssUrl": "https://bankgirotab.teamtailor.com/jobs.rss",
+      "jobCount": 15,
+      "enabled": true
+    },
+    {
+      "name": "Bastard Burgers",
+      "careerSiteUrl": "https://bastardburgers.teamtailor.com/",
+      "rssUrl": "https://bastardburgers.teamtailor.com/jobs.rss",
+      "jobCount": 24,
+      "enabled": true
+    },
+    {
+      "name": "Bayer Nordic",
+      "careerSiteUrl": "https://bayernordic.teamtailor.com/",
+      "rssUrl": "https://bayernordic.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Bb",
+      "careerSiteUrl": "https://bb.teamtailor.com/",
+      "rssUrl": "https://bb.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Berg Propulsion AB",
+      "careerSiteUrl": "https://bergpropulsion.teamtailor.com/",
+      "rssUrl": "https://bergpropulsion.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Berättarministeriet",
+      "careerSiteUrl": "https://berattarministeriet.teamtailor.com/",
+      "rssUrl": "https://berattarministeriet.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Big Bite",
+      "careerSiteUrl": "https://bigbite.teamtailor.com/",
+      "rssUrl": "https://bigbite.teamtailor.com/jobs.rss",
+      "jobCount": 59,
+      "enabled": true
+    },
+    {
+      "name": "Billogram",
+      "careerSiteUrl": "https://career.billogram.com/",
+      "rssUrl": "https://career.billogram.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Bilvision",
+      "careerSiteUrl": "https://bilvision.teamtailor.com/",
+      "rssUrl": "https://bilvision.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "BioTwin",
+      "careerSiteUrl": "https://biotwin.teamtailor.com/",
+      "rssUrl": "https://biotwin.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Blendow Group",
+      "careerSiteUrl": "https://blendowgroup.teamtailor.com/",
+      "rssUrl": "https://blendowgroup.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Body Buddy Foods",
+      "careerSiteUrl": "https://bodybuddyfoods.teamtailor.com/",
+      "rssUrl": "https://bodybuddyfoods.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Bokio",
+      "careerSiteUrl": "https://jobs.bokio.se/",
+      "rssUrl": "https://jobs.bokio.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "BookBeat",
+      "careerSiteUrl": "https://jobs.bookbeat.com/",
+      "rssUrl": "https://jobs.bookbeat.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Borås Djurpark och Camping AB",
+      "careerSiteUrl": "https://borasdjurparkcamping.teamtailor.com/",
+      "rssUrl": "https://borasdjurparkcamping.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Bredvid",
+      "careerSiteUrl": "https://bredvid.teamtailor.com/",
+      "rssUrl": "https://bredvid.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Brinova Fastigheter AB",
+      "careerSiteUrl": "https://brinova.teamtailor.com/",
+      "rssUrl": "https://brinova.teamtailor.com/jobs.rss",
+      "jobCount": 4,
+      "enabled": true
+    },
+    {
+      "name": "bunny.net",
+      "careerSiteUrl": "https://bunnynet.teamtailor.com/",
+      "rssUrl": "https://bunnynet.teamtailor.com/jobs.rss",
+      "jobCount": 7,
+      "enabled": true
+    },
+    {
+      "name": "Börjessons",
+      "careerSiteUrl": "https://borjessonkoncernen.teamtailor.com/",
+      "rssUrl": "https://borjessonkoncernen.teamtailor.com/jobs.rss",
+      "jobCount": 4,
+      "enabled": true
+    },
+    {
+      "name": "C3 Creative Code and Content",
+      "careerSiteUrl": "https://c3creativecodeandcontent.teamtailor.com/",
+      "rssUrl": "https://c3creativecodeandcontent.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "CAB Group",
+      "careerSiteUrl": "https://cabgroup.teamtailor.com/",
+      "rssUrl": "https://cabgroup.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Capra-gruppen",
+      "careerSiteUrl": "https://capraconsulting.teamtailor.com/",
+      "rssUrl": "https://capraconsulting.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Captica AB",
+      "careerSiteUrl": "https://captica.teamtailor.com/",
+      "rssUrl": "https://captica.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Capto HR",
+      "careerSiteUrl": "https://captohrab.teamtailor.com/",
+      "rssUrl": "https://captohrab.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Careers at EY: search jobs",
+      "careerSiteUrl": "https://careers.ey.com/",
+      "rssUrl": "https://careers.ey.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Careers at Getinge",
+      "careerSiteUrl": "https://careers.getinge.com/",
+      "rssUrl": "https://careers.getinge.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Caspeco",
+      "careerSiteUrl": "https://caspecoab.teamtailor.com/",
+      "rssUrl": "https://caspecoab.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "CaterMate",
+      "careerSiteUrl": "https://catermate.teamtailor.com/",
+      "rssUrl": "https://catermate.teamtailor.com/jobs.rss",
+      "jobCount": 8,
+      "enabled": true
+    },
+    {
+      "name": "CDP Global",
+      "careerSiteUrl": "https://cdpworldwide.teamtailor.com/",
+      "rssUrl": "https://cdpworldwide.teamtailor.com/jobs.rss",
+      "jobCount": 13,
+      "enabled": true
+    },
+    {
+      "name": "Centigo",
+      "careerSiteUrl": "https://centigo.teamtailor.com/",
+      "rssUrl": "https://centigo.teamtailor.com/jobs.rss",
+      "jobCount": 13,
+      "enabled": true
+    },
+    {
+      "name": "Centra",
+      "careerSiteUrl": "https://centra.teamtailor.com/",
+      "rssUrl": "https://centra.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Cepheo",
+      "careerSiteUrl": "https://cepheo.teamtailor.com/",
+      "rssUrl": "https://cepheo.teamtailor.com/jobs.rss",
+      "jobCount": 17,
+      "enabled": true
+    },
+    {
+      "name": "Cerecaptio",
+      "careerSiteUrl": "https://cerecaptio.teamtailor.com/",
+      "rssUrl": "https://cerecaptio.teamtailor.com/jobs.rss",
+      "jobCount": 7,
+      "enabled": true
+    },
+    {
+      "name": "Checkin",
+      "careerSiteUrl": "https://checkin.teamtailor.com/",
+      "rssUrl": "https://checkin.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "ChilliFrog",
+      "careerSiteUrl": "https://chillifrog-1648819114.teamtailor.com/",
+      "rssUrl": "https://chillifrog-1648819114.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Chip",
+      "careerSiteUrl": "https://chip.teamtailor.com/",
+      "rssUrl": "https://chip.teamtailor.com/jobs.rss",
+      "jobCount": 16,
+      "enabled": true
+    },
+    {
+      "name": "Cirkus Venues",
+      "careerSiteUrl": "https://cirkusvenues.teamtailor.com/",
+      "rssUrl": "https://cirkusvenues.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Clas Fixare AB",
+      "careerSiteUrl": "https://clasfixare.teamtailor.com/",
+      "rssUrl": "https://clasfixare.teamtailor.com/jobs.rss",
+      "jobCount": 25,
+      "enabled": true
+    },
+    {
+      "name": "Clavister",
+      "careerSiteUrl": "https://careers.clavister.com/",
+      "rssUrl": "https://careers.clavister.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Click&amp;Boat",
+      "careerSiteUrl": "https://clickboat.teamtailor.com/",
+      "rssUrl": "https://clickboat.teamtailor.com/jobs.rss",
+      "jobCount": 29,
+      "enabled": true
+    },
+    {
+      "name": "Climeon",
+      "careerSiteUrl": "https://career.climeon.com/",
+      "rssUrl": "https://career.climeon.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Comatec",
+      "careerSiteUrl": "https://comatec.teamtailor.com/",
+      "rssUrl": "https://comatec.teamtailor.com/jobs.rss",
+      "jobCount": 8,
+      "enabled": true
+    },
+    {
+      "name": "Combine",
+      "careerSiteUrl": "https://combine.teamtailor.com/",
+      "rssUrl": "https://combine.teamtailor.com/jobs.rss",
+      "jobCount": 6,
+      "enabled": true
+    },
+    {
+      "name": "Common Management Solutions",
+      "careerSiteUrl": "https://common.teamtailor.com/",
+      "rssUrl": "https://common.teamtailor.com/jobs.rss",
+      "jobCount": 13,
+      "enabled": true
+    },
+    {
+      "name": "Corvus Energy",
+      "careerSiteUrl": "https://corvusenergy.teamtailor.com/",
+      "rssUrl": "https://corvusenergy.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "COS Systems",
+      "careerSiteUrl": "https://cossystems.teamtailor.com/",
+      "rssUrl": "https://cossystems.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "D&amp;AD",
+      "careerSiteUrl": "https://dandad.teamtailor.com/",
+      "rssUrl": "https://dandad.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Diaceutics",
+      "careerSiteUrl": "https://diaceutics-1692002119.teamtailor.com/",
+      "rssUrl": "https://diaceutics-1692002119.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Dignify",
+      "careerSiteUrl": "https://dignify.teamtailor.com/",
+      "rssUrl": "https://dignify.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Discover",
+      "careerSiteUrl": "https://www.paradoxinteractive.com/our-games/discover",
+      "rssUrl": "https://www.paradoxinteractive.com/our-games/discover/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Diös Fastigheter",
+      "careerSiteUrl": "https://dios.teamtailor.com/",
+      "rssUrl": "https://dios.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Doktor.se",
+      "careerSiteUrl": "https://jobs.doktor.se/",
+      "rssUrl": "https://jobs.doktor.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Draftea",
+      "careerSiteUrl": "https://draftea.teamtailor.com/",
+      "rssUrl": "https://draftea.teamtailor.com/jobs.rss",
+      "jobCount": 9,
+      "enabled": true
+    },
+    {
+      "name": "Dråpen i Havet",
+      "careerSiteUrl": "https://drapenihavet.teamtailor.com/",
+      "rssUrl": "https://drapenihavet.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "EcoOnline",
+      "careerSiteUrl": "https://ecoonline.teamtailor.com/",
+      "rssUrl": "https://ecoonline.teamtailor.com/jobs.rss",
+      "jobCount": 12,
+      "enabled": true
+    },
+    {
+      "name": "Edge Impact",
+      "careerSiteUrl": "https://edge.teamtailor.com/",
+      "rssUrl": "https://edge.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Eldo",
+      "careerSiteUrl": "https://eldo.teamtailor.com/",
+      "rssUrl": "https://eldo.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Elektromontage",
+      "careerSiteUrl": "https://elektromontage.teamtailor.com/",
+      "rssUrl": "https://elektromontage.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "ELITS",
+      "careerSiteUrl": "https://elits.teamtailor.com/",
+      "rssUrl": "https://elits.teamtailor.com/jobs.rss",
+      "jobCount": 12,
+      "enabled": true
+    },
+    {
+      "name": "Emil Lundgren",
+      "careerSiteUrl": "https://emillundgren.teamtailor.com/",
+      "rssUrl": "https://emillundgren.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Entry Point North",
+      "careerSiteUrl": "https://entrypointnorth.teamtailor.com/",
+      "rssUrl": "https://entrypointnorth.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Epidemic Sound",
+      "careerSiteUrl": "https://careers.epidemicsound.com/",
+      "rssUrl": "https://careers.epidemicsound.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Epidemic Sound",
+      "careerSiteUrl": "https://epidemic-sound.teamtailor.com/",
+      "rssUrl": "https://epidemic-sound.teamtailor.com/jobs.rss",
+      "jobCount": 33,
+      "enabled": true
+    },
+    {
+      "name": "Erlang Solutions",
+      "careerSiteUrl": "https://erlangsolutions.teamtailor.com/",
+      "rssUrl": "https://erlangsolutions.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Estrid",
+      "careerSiteUrl": "https://join.estrid.com/",
+      "rssUrl": "https://join.estrid.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Europcar Sverige",
+      "careerSiteUrl": "https://europcar.teamtailor.com/",
+      "rssUrl": "https://europcar.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Eversheds Sutherland",
+      "careerSiteUrl": "https://evershedssutherland.teamtailor.com/",
+      "rssUrl": "https://evershedssutherland.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "EveryMatrix",
+      "careerSiteUrl": "https://everymatrix.teamtailor.com/",
+      "rssUrl": "https://everymatrix.teamtailor.com/jobs.rss",
+      "jobCount": 58,
+      "enabled": true
+    },
+    {
+      "name": "Evolve Today",
+      "careerSiteUrl": "https://evolvetoday.teamtailor.com/",
+      "rssUrl": "https://evolvetoday.teamtailor.com/jobs.rss",
+      "jobCount": 15,
+      "enabled": true
+    },
+    {
+      "name": "Face2face Creatives International",
+      "careerSiteUrl": "https://face2face.teamtailor.com/",
+      "rssUrl": "https://face2face.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Fair Group",
+      "careerSiteUrl": "https://fairgroup.teamtailor.com/",
+      "rssUrl": "https://fairgroup.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Fastighets AB Balder",
+      "careerSiteUrl": "https://balder.teamtailor.com/",
+      "rssUrl": "https://balder.teamtailor.com/jobs.rss",
+      "jobCount": 19,
+      "enabled": true
+    },
+    {
+      "name": "Ferla",
+      "careerSiteUrl": "https://enstar.teamtailor.com/",
+      "rssUrl": "https://enstar.teamtailor.com/jobs.rss",
+      "jobCount": 4,
+      "enabled": true
+    },
+    {
+      "name": "Fidelio",
+      "careerSiteUrl": "https://fideliocapital.teamtailor.com/",
+      "rssUrl": "https://fideliocapital.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Fightclub",
+      "careerSiteUrl": "https://fightclub.teamtailor.com/",
+      "rssUrl": "https://fightclub.teamtailor.com/jobs.rss",
+      "jobCount": 18,
+      "enabled": true
+    },
+    {
+      "name": "Filippa K",
+      "careerSiteUrl": "https://career.filippa-k.com/",
+      "rssUrl": "https://career.filippa-k.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Fishbrain",
+      "careerSiteUrl": "https://careers.fishbrain.com/",
+      "rssUrl": "https://careers.fishbrain.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Fjällräven",
+      "careerSiteUrl": "https://career.fjallraven.com/",
+      "rssUrl": "https://career.fjallraven.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Fliq",
+      "careerSiteUrl": "https://fliq.teamtailor.com/",
+      "rssUrl": "https://fliq.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Flowscape",
+      "careerSiteUrl": "https://flowscape.teamtailor.com/",
+      "rssUrl": "https://flowscape.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Four FM AB",
+      "careerSiteUrl": "https://fourfmab.teamtailor.com/",
+      "rssUrl": "https://fourfmab.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Freemelt",
+      "careerSiteUrl": "https://freemelt.teamtailor.com/",
+      "rssUrl": "https://freemelt.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Fremantle, Strix och Baluba Casting",
+      "careerSiteUrl": "https://baluba.teamtailor.com/",
+      "rssUrl": "https://baluba.teamtailor.com/jobs.rss",
+      "jobCount": 7,
+      "enabled": true
+    },
+    {
+      "name": "Funnel",
+      "careerSiteUrl": "https://jobs.funnel.io/",
+      "rssUrl": "https://jobs.funnel.io/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Furuhöjden",
+      "careerSiteUrl": "https://furuhojden.teamtailor.com/",
+      "rssUrl": "https://furuhojden.teamtailor.com/jobs.rss",
+      "jobCount": 4,
+      "enabled": true
+    },
+    {
+      "name": "Garda Alarm",
+      "careerSiteUrl": "https://gardaalarm.teamtailor.com/",
+      "rssUrl": "https://gardaalarm.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Geodata",
+      "careerSiteUrl": "https://geodata.teamtailor.com/",
+      "rssUrl": "https://geodata.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Global Human Resources",
+      "careerSiteUrl": "https://globalhr.teamtailor.com/",
+      "rssUrl": "https://globalhr.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Go Strong",
+      "careerSiteUrl": "https://gostrong.teamtailor.com/",
+      "rssUrl": "https://gostrong.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Go!Sales.",
+      "careerSiteUrl": "https://gosales.teamtailor.com/",
+      "rssUrl": "https://gosales.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Greenely",
+      "careerSiteUrl": "https://careers.greenely.se/",
+      "rssUrl": "https://careers.greenely.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Gränsö Slott",
+      "careerSiteUrl": "https://gransoslott.teamtailor.com/",
+      "rssUrl": "https://gransoslott.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Guestit AB",
+      "careerSiteUrl": "https://guestitab.teamtailor.com/",
+      "rssUrl": "https://guestitab.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Haeger &amp; Carlsson | Executive Search &amp; Interim AB",
+      "careerSiteUrl": "https://haegercarlsson.teamtailor.com/",
+      "rssUrl": "https://haegercarlsson.teamtailor.com/jobs.rss",
+      "jobCount": 27,
+      "enabled": true
+    },
+    {
+      "name": "Hartmark Executive",
+      "careerSiteUrl": "https://hartmarkexecutivesearch.teamtailor.com/",
+      "rssUrl": "https://hartmarkexecutivesearch.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Hashpays",
+      "careerSiteUrl": "https://hashpays.teamtailor.com/",
+      "rssUrl": "https://hashpays.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Hellström &amp; Hjelm Revision AB",
+      "careerSiteUrl": "https://hhrevision-1674590115.teamtailor.com/",
+      "rssUrl": "https://hhrevision-1674590115.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Hemnet",
+      "careerSiteUrl": "https://career.hemnet.se/",
+      "rssUrl": "https://career.hemnet.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "HF Agency",
+      "careerSiteUrl": "https://husfoto.teamtailor.com/",
+      "rssUrl": "https://husfoto.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Hifab",
+      "careerSiteUrl": "https://hifab.teamtailor.com/",
+      "rssUrl": "https://hifab.teamtailor.com/jobs.rss",
+      "jobCount": 6,
+      "enabled": true
+    },
+    {
+      "name": "HiQ",
+      "careerSiteUrl": "https://career.hiq.se/",
+      "rssUrl": "https://career.hiq.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Hirmun Rekrytiimi",
+      "careerSiteUrl": "https://hirmu.teamtailor.com/",
+      "rssUrl": "https://hirmu.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "HLL Hyreslandslaget",
+      "careerSiteUrl": "https://hll.teamtailor.com/",
+      "rssUrl": "https://hll.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Holmgrens Bil",
+      "careerSiteUrl": "https://holmgrensbil.teamtailor.com/",
+      "rssUrl": "https://holmgrensbil.teamtailor.com/jobs.rss",
+      "jobCount": 6,
+      "enabled": true
+    },
+    {
+      "name": "Home Furnishing Nordic AB",
+      "careerSiteUrl": "https://homefurnishingnordic.teamtailor.com/",
+      "rssUrl": "https://homefurnishingnordic.teamtailor.com/jobs.rss",
+      "jobCount": 6,
+      "enabled": true
+    },
+    {
+      "name": "Huawei Sweden R&amp;D",
+      "careerSiteUrl": "https://huaweisweden.teamtailor.com/",
+      "rssUrl": "https://huaweisweden.teamtailor.com/jobs.rss",
+      "jobCount": 36,
+      "enabled": true
+    },
+    {
+      "name": "Hudson Nordic",
+      "careerSiteUrl": "https://hudsonnordic.teamtailor.com/",
+      "rssUrl": "https://hudsonnordic.teamtailor.com/jobs.rss",
+      "jobCount": 8,
+      "enabled": true
+    },
+    {
+      "name": "Humanise",
+      "careerSiteUrl": "https://humanisecollective.teamtailor.com/",
+      "rssUrl": "https://humanisecollective.teamtailor.com/jobs.rss",
+      "jobCount": 9,
+      "enabled": true
+    },
+    {
+      "name": "Hälsomedicinskt Center",
+      "careerSiteUrl": "https://halsomedicinsktcenter.teamtailor.com/",
+      "rssUrl": "https://halsomedicinsktcenter.teamtailor.com/jobs.rss",
+      "jobCount": 4,
+      "enabled": true
+    },
+    {
+      "name": "Idre Himmelfjäll",
+      "careerSiteUrl": "https://idrehimmelfjall.teamtailor.com/",
+      "rssUrl": "https://idrehimmelfjall.teamtailor.com/jobs.rss",
+      "jobCount": 4,
+      "enabled": true
+    },
+    {
+      "name": "IKUE",
+      "careerSiteUrl": "https://ikue.teamtailor.com/",
+      "rssUrl": "https://ikue.teamtailor.com/jobs.rss",
+      "jobCount": 6,
+      "enabled": true
+    },
+    {
+      "name": "Inet",
+      "careerSiteUrl": "https://karriar.inet.se/",
+      "rssUrl": "https://karriar.inet.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Infranode",
+      "careerSiteUrl": "https://infranode.teamtailor.com/",
+      "rssUrl": "https://infranode.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Inrekraft",
+      "careerSiteUrl": "https://inrekraft.teamtailor.com/",
+      "rssUrl": "https://inrekraft.teamtailor.com/jobs.rss",
+      "jobCount": 33,
+      "enabled": true
+    },
+    {
+      "name": "Insplan",
+      "careerSiteUrl": "https://insplan.teamtailor.com/",
+      "rssUrl": "https://insplan.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Instabee",
+      "careerSiteUrl": "https://career.instabee.com/",
+      "rssUrl": "https://career.instabee.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Instabee",
+      "careerSiteUrl": "https://instabee.teamtailor.com/",
+      "rssUrl": "https://instabee.teamtailor.com/jobs.rss",
+      "jobCount": 37,
+      "enabled": true
+    },
+    {
+      "name": "Insurello",
+      "careerSiteUrl": "https://careers.insurello.se/",
+      "rssUrl": "https://careers.insurello.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Interreg Volunteer Youth (IVY)",
+      "careerSiteUrl": "https://aebr.teamtailor.com/",
+      "rssUrl": "https://aebr.teamtailor.com/jobs.rss",
+      "jobCount": 8,
+      "enabled": true
+    },
+    {
+      "name": "INU",
+      "careerSiteUrl": "https://inu.teamtailor.com/",
+      "rssUrl": "https://inu.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Investa",
+      "careerSiteUrl": "https://investa.teamtailor.com/",
+      "rssUrl": "https://investa.teamtailor.com/jobs.rss",
+      "jobCount": 8,
+      "enabled": true
+    },
+    {
+      "name": "iSales",
+      "careerSiteUrl": "https://isales.teamtailor.com/",
+      "rssUrl": "https://isales.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Ivy Talents",
+      "careerSiteUrl": "https://ivytalents.teamtailor.com/",
+      "rssUrl": "https://ivytalents.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Job&amp;Talent",
+      "careerSiteUrl": "https://jobandtalent.teamtailor.com/",
+      "rssUrl": "https://jobandtalent.teamtailor.com/jobs.rss",
+      "jobCount": 59,
+      "enabled": true
+    },
+    {
+      "name": "Jobs at Länsförsäkringar",
+      "careerSiteUrl": "https://jobb.lansforsakringar.se/",
+      "rssUrl": "https://jobb.lansforsakringar.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Jovi",
+      "careerSiteUrl": "https://jovikonsultab.teamtailor.com/",
+      "rssUrl": "https://jovikonsultab.teamtailor.com/jobs.rss",
+      "jobCount": 28,
+      "enabled": true
+    },
+    {
+      "name": "Jul i vinterland",
+      "careerSiteUrl": "https://julivinterland.teamtailor.com/",
+      "rssUrl": "https://julivinterland.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Karma",
+      "careerSiteUrl": "https://careers.karma.life/",
+      "rssUrl": "https://careers.karma.life/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Karriär på Axfood",
+      "careerSiteUrl": "https://jobb.axfood.se/",
+      "rssUrl": "https://jobb.axfood.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Karriära",
+      "careerSiteUrl": "https://karriara.teamtailor.com/",
+      "rssUrl": "https://karriara.teamtailor.com/jobs.rss",
+      "jobCount": 6,
+      "enabled": true
+    },
+    {
+      "name": "KellyDeli",
+      "careerSiteUrl": "https://kellydeli.teamtailor.com/",
+      "rssUrl": "https://kellydeli.teamtailor.com/jobs.rss",
+      "jobCount": 13,
+      "enabled": true
+    },
+    {
+      "name": "KellyDeli Partnership",
+      "careerSiteUrl": "https://kellydelipartnerships-1692187640.teamtailor.com/",
+      "rssUrl": "https://kellydelipartnerships-1692187640.teamtailor.com/jobs.rss",
+      "jobCount": 57,
+      "enabled": true
+    },
+    {
+      "name": "King",
+      "careerSiteUrl": "https://careers.king.com/us/en",
+      "rssUrl": "https://careers.king.com/us/en/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Knowit Group",
+      "careerSiteUrl": "https://career.knowit.se/",
+      "rssUrl": "https://career.knowit.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Lanterna Education",
+      "careerSiteUrl": "https://lanternaeducation.teamtailor.com/",
+      "rssUrl": "https://lanternaeducation.teamtailor.com/jobs.rss",
+      "jobCount": 22,
+      "enabled": true
+    },
+    {
+      "name": "Lavendo",
+      "careerSiteUrl": "https://lavendo.teamtailor.com/",
+      "rssUrl": "https://lavendo.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "LegalWorks",
+      "careerSiteUrl": "https://legalworks.teamtailor.com/",
+      "rssUrl": "https://legalworks.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Lejongårdar",
+      "careerSiteUrl": "https://lejongardar.teamtailor.com/",
+      "rssUrl": "https://lejongardar.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Lexly",
+      "careerSiteUrl": "https://lexly1.teamtailor.com/",
+      "rssUrl": "https://lexly1.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Lindvallen Restauranger",
+      "careerSiteUrl": "https://lindvallenrestaurangeraktiebolag.teamtailor.com/",
+      "rssUrl": "https://lindvallenrestaurangeraktiebolag.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "LST Group",
+      "careerSiteUrl": "https://lst.teamtailor.com/",
+      "rssUrl": "https://lst.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Lunar",
+      "careerSiteUrl": "https://jobs.lunar.app/",
+      "rssUrl": "https://jobs.lunar.app/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "LäkarLeasing",
+      "careerSiteUrl": "https://lakarleasing.teamtailor.com/",
+      "rssUrl": "https://lakarleasing.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "ManoMotion",
+      "careerSiteUrl": "https://manomotion.teamtailor.com/",
+      "rssUrl": "https://manomotion.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Market Partner",
+      "careerSiteUrl": "https://marketpartner.teamtailor.com/",
+      "rssUrl": "https://marketpartner.teamtailor.com/jobs.rss",
+      "jobCount": 10,
+      "enabled": true
+    },
+    {
+      "name": "Mathem",
+      "careerSiteUrl": "https://karriar.mathem.se/",
+      "rssUrl": "https://karriar.mathem.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Matsmart-Motatos",
+      "careerSiteUrl": "https://people.matsmart.se/",
+      "rssUrl": "https://people.matsmart.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Mecenat",
+      "careerSiteUrl": "https://mecenat.teamtailor.com/",
+      "rssUrl": "https://mecenat.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Metria",
+      "careerSiteUrl": "https://metria.teamtailor.com/",
+      "rssUrl": "https://metria.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Mio BPA",
+      "careerSiteUrl": "https://miogruppen.teamtailor.com/",
+      "rssUrl": "https://miogruppen.teamtailor.com/jobs.rss",
+      "jobCount": 100,
+      "enabled": true
+    },
+    {
+      "name": "Mio Omsorg",
+      "careerSiteUrl": "https://mioomsorg.teamtailor.com/",
+      "rssUrl": "https://mioomsorg.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "mod:group",
+      "careerSiteUrl": "https://modgroup.teamtailor.com/",
+      "rssUrl": "https://modgroup.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Modulai",
+      "careerSiteUrl": "https://modulai.teamtailor.com/",
+      "rssUrl": "https://modulai.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Moleculent",
+      "careerSiteUrl": "https://moleculent-1651476998.teamtailor.com/",
+      "rssUrl": "https://moleculent-1651476998.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Monster",
+      "careerSiteUrl": "https://monster.teamtailor.com/",
+      "rssUrl": "https://monster.teamtailor.com/jobs.rss",
+      "jobCount": 4,
+      "enabled": true
+    },
+    {
+      "name": "Movestic",
+      "careerSiteUrl": "https://movestic.teamtailor.com/",
+      "rssUrl": "https://movestic.teamtailor.com/jobs.rss",
+      "jobCount": 4,
+      "enabled": true
+    },
+    {
+      "name": "MP Systems",
+      "careerSiteUrl": "https://mpsystems.teamtailor.com/",
+      "rssUrl": "https://mpsystems.teamtailor.com/jobs.rss",
+      "jobCount": 11,
+      "enabled": true
+    },
+    {
+      "name": "Mäklarhuset",
+      "careerSiteUrl": "https://jobb.maklarhuset.se/",
+      "rssUrl": "https://jobb.maklarhuset.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Natural Cycles",
+      "careerSiteUrl": "https://naturalcycles.teamtailor.com/",
+      "rssUrl": "https://naturalcycles.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Naturkompaniet",
+      "careerSiteUrl": "https://naturkompaniet.teamtailor.com/",
+      "rssUrl": "https://naturkompaniet.teamtailor.com/jobs.rss",
+      "jobCount": 7,
+      "enabled": true
+    },
+    {
+      "name": "Neodev",
+      "careerSiteUrl": "https://neodev.teamtailor.com/",
+      "rssUrl": "https://neodev.teamtailor.com/jobs.rss",
+      "jobCount": 2,
+      "enabled": true
+    },
+    {
+      "name": "Netigate",
+      "careerSiteUrl": "https://netde.teamtailor.com/",
+      "rssUrl": "https://netde.teamtailor.com/jobs.rss",
+      "jobCount": 8,
+      "enabled": true
+    },
+    {
+      "name": "Netspeak Games",
+      "careerSiteUrl": "https://netspeakgames.teamtailor.com/",
+      "rssUrl": "https://netspeakgames.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Nordic Operation Center",
+      "careerSiteUrl": "https://nordicoperationcenter.teamtailor.com/",
+      "rssUrl": "https://nordicoperationcenter.teamtailor.com/jobs.rss",
+      "jobCount": 19,
+      "enabled": true
+    },
+    {
+      "name": "Nordic Progress",
+      "careerSiteUrl": "https://nordicprogress.teamtailor.com/",
+      "rssUrl": "https://nordicprogress.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Nordiska Fönster",
+      "careerSiteUrl": "https://nordiska.teamtailor.com/",
+      "rssUrl": "https://nordiska.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Normative",
+      "careerSiteUrl": "https://careers.normative.io/",
+      "rssUrl": "https://careers.normative.io/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Northvolt | Northvolt",
+      "careerSiteUrl": "https://northvolt.com/",
+      "rssUrl": "https://northvolt.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Nothing",
+      "careerSiteUrl": "https://budgetinsight.teamtailor.com/",
+      "rssUrl": "https://budgetinsight.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Nowaste Logistics AB",
+      "careerSiteUrl": "https://nowaste.teamtailor.com/",
+      "rssUrl": "https://nowaste.teamtailor.com/jobs.rss",
+      "jobCount": 4,
+      "enabled": true
+    },
+    {
+      "name": "Nubox",
+      "careerSiteUrl": "https://nubox.teamtailor.com/",
+      "rssUrl": "https://nubox.teamtailor.com/jobs.rss",
+      "jobCount": 7,
+      "enabled": true
+    },
+    {
+      "name": "Oatly AB",
+      "careerSiteUrl": "https://careers.oatly.com/",
+      "rssUrl": "https://careers.oatly.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "OCS",
+      "careerSiteUrl": "https://ocs.teamtailor.com/",
+      "rssUrl": "https://ocs.teamtailor.com/jobs.rss",
+      "jobCount": 4,
+      "enabled": true
+    },
+    {
+      "name": "Octopus IT",
+      "careerSiteUrl": "https://octopusit.teamtailor.com/",
+      "rssUrl": "https://octopusit.teamtailor.com/jobs.rss",
+      "jobCount": 100,
+      "enabled": true
+    },
+    {
+      "name": "OLKA Sportresor",
+      "careerSiteUrl": "https://olkasportresor.teamtailor.com/",
+      "rssUrl": "https://olkasportresor.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Omexom Sweden",
+      "careerSiteUrl": "https://omexom.teamtailor.com/",
+      "rssUrl": "https://omexom.teamtailor.com/jobs.rss",
+      "jobCount": 20,
+      "enabled": true
+    },
+    {
+      "name": "Omnistaff",
+      "careerSiteUrl": "https://omnistaff.teamtailor.com/",
+      "rssUrl": "https://omnistaff.teamtailor.com/jobs.rss",
+      "jobCount": 18,
+      "enabled": true
+    },
+    {
+      "name": "OneLab",
+      "careerSiteUrl": "https://onelab.teamtailor.com/",
+      "rssUrl": "https://onelab.teamtailor.com/jobs.rss",
+      "jobCount": 9,
+      "enabled": true
+    },
+    {
+      "name": "Onemotion IMC",
+      "careerSiteUrl": "https://onemotion.teamtailor.com/",
+      "rssUrl": "https://onemotion.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Online Partner",
+      "careerSiteUrl": "https://onlinepartner.teamtailor.com/",
+      "rssUrl": "https://onlinepartner.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "ONNA",
+      "careerSiteUrl": "https://onnagreens.teamtailor.com/",
+      "rssUrl": "https://onnagreens.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Paradox Interactive",
+      "careerSiteUrl": "https://career.paradoxplaza.com/",
+      "rssUrl": "https://career.paradoxplaza.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Partnerd",
+      "careerSiteUrl": "https://partnerd.teamtailor.com/",
+      "rssUrl": "https://partnerd.teamtailor.com/jobs.rss",
+      "jobCount": 15,
+      "enabled": true
+    },
+    {
+      "name": "Passion Lab",
+      "careerSiteUrl": "https://passionlab.teamtailor.com/",
+      "rssUrl": "https://passionlab.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Pet Media Group",
+      "careerSiteUrl": "https://petmediagroup.teamtailor.com/",
+      "rssUrl": "https://petmediagroup.teamtailor.com/jobs.rss",
+      "jobCount": 10,
+      "enabled": true
+    },
+    {
+      "name": "Pihr",
+      "careerSiteUrl": "https://pihr.teamtailor.com/",
+      "rssUrl": "https://pihr.teamtailor.com/jobs.rss",
+      "jobCount": 3,
+      "enabled": true
+    },
+    {
+      "name": "Qasa",
+      "careerSiteUrl": "https://careers.qasa.se/",
+      "rssUrl": "https://careers.qasa.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Qred Bank AB",
+      "careerSiteUrl": "https://jobs.qred.com/",
+      "rssUrl": "https://jobs.qred.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Quinyx",
+      "careerSiteUrl": "https://careers.quinyx.com/",
+      "rssUrl": "https://careers.quinyx.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Rugvista",
+      "careerSiteUrl": "https://carpetvista.teamtailor.com/",
+      "rssUrl": "https://carpetvista.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "Sanchez group",
+      "careerSiteUrl": "https://hijadesanchez.teamtailor.com/",
+      "rssUrl": "https://hijadesanchez.teamtailor.com/jobs.rss",
+      "jobCount": 7,
+      "enabled": true
+    },
+    {
+      "name": "sbab.se",
+      "careerSiteUrl": "https://www.sbab.se/1/jobb/jobb.html?jobb=/",
+      "rssUrl": "https://www.sbab.se/1/jobb/jobb.html?jobb=/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Sharkmob",
+      "careerSiteUrl": "https://career.sharkmob.com/",
+      "rssUrl": "https://career.sharkmob.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Sift Lab",
+      "careerSiteUrl": "https://infobaleen.teamtailor.com/",
+      "rssUrl": "https://infobaleen.teamtailor.com/jobs.rss",
+      "jobCount": 4,
+      "enabled": true
+    },
+    {
+      "name": "Skandia",
+      "careerSiteUrl": "https://karriar.skandia.se/",
+      "rssUrl": "https://karriar.skandia.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "SKF",
+      "careerSiteUrl": "https://www.skf.com/se",
+      "rssUrl": "https://www.skf.com/se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "SKF Jobs",
+      "careerSiteUrl": "https://career.skf.com/",
+      "rssUrl": "https://career.skf.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Soundtrack",
+      "careerSiteUrl": "https://careers.soundtrack.io/",
+      "rssUrl": "https://careers.soundtrack.io/jobs.rss",
+      "jobCount": 9,
+      "enabled": true
+    },
+    {
+      "name": "Stadium.se - Sport och sportmode till bästa pris",
+      "careerSiteUrl": "https://www.stadium.se/",
+      "rssUrl": "https://www.stadium.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Starbreeze",
+      "careerSiteUrl": "https://jobs.starbreeze.com/",
+      "rssUrl": "https://jobs.starbreeze.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Stegra",
+      "careerSiteUrl": "https://career.stegra.com/",
+      "rssUrl": "https://career.stegra.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Strix Televisjon",
+      "careerSiteUrl": "https://bergehus.teamtailor.com/",
+      "rssUrl": "https://bergehus.teamtailor.com/jobs.rss",
+      "jobCount": 5,
+      "enabled": true
+    },
+    {
+      "name": "Svea KBT &amp; Elly Care",
+      "careerSiteUrl": "https://jobb.sveakbt.se/",
+      "rssUrl": "https://jobb.sveakbt.se/jobs.rss",
+      "jobCount": 20,
+      "enabled": true
+    },
+    {
+      "name": "Svensk Markservice AB",
+      "careerSiteUrl": "https://norr.teamtailor.com/",
+      "rssUrl": "https://norr.teamtailor.com/jobs.rss",
+      "jobCount": 8,
+      "enabled": true
+    },
+    {
+      "name": "Tacton",
+      "careerSiteUrl": "https://careers.tacton.com/",
+      "rssUrl": "https://careers.tacton.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Teamtailor",
+      "careerSiteUrl": "https://career.teamtailor.com/",
+      "rssUrl": "https://career.teamtailor.com/jobs.rss",
+      "jobCount": 21,
+      "enabled": true
+    },
+    {
+      "name": "The Bishops Arms",
+      "careerSiteUrl": "https://bishopsarms.teamtailor.com/",
+      "rssUrl": "https://bishopsarms.teamtailor.com/jobs.rss",
+      "jobCount": 28,
+      "enabled": true
+    },
+    {
+      "name": "Tibber",
+      "careerSiteUrl": "https://jobs.tibber.com/",
+      "rssUrl": "https://jobs.tibber.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Tink",
+      "careerSiteUrl": "https://jobs.tink.se",
+      "rssUrl": "https://jobs.tink.se/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Truesec",
+      "careerSiteUrl": "https://www.truesec.com/career",
+      "rssUrl": "https://www.truesec.com/career/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Voi Technology",
+      "careerSiteUrl": "https://careers.voi.com/",
+      "rssUrl": "https://careers.voi.com/jobs.rss",
+      "enabled": true
+    },
+    {
+      "name": "Wihuri Aviation",
+      "careerSiteUrl": "https://jetflite.teamtailor.com/",
+      "rssUrl": "https://jetflite.teamtailor.com/jobs.rss",
+      "jobCount": 1,
+      "enabled": true
+    },
+    {
+      "name": "www",
+      "careerSiteUrl": "https://www.citygross.se/",
+      "rssUrl": "https://www.citygross.se/jobs.rss",
+      "enabled": true
+    }
+  ]
+}

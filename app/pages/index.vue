@@ -162,8 +162,9 @@
       </div>
 
       <!-- Job Results -->
-      <div v-if="loading" class="loading-message">
-        Laddar jobb från Platsbanken...
+      <div v-if="loading" class="platsbanken-loading">
+        <div class="loading-spinner"></div>
+        <span>Laddar jobb från Platsbanken...</span>
       </div>
       
       <div v-else-if="displayJobs.length === 0 && !teamtailorLoading" class="no-jobs-message">
@@ -506,7 +507,11 @@ const teamtailorLoaded = ref(false)
 
 // API functions - Progressive loading: Platsbanken first, then TeamTailor
 const fetchJobs = async (append = false) => {
-  if (loading.value) return
+  // Prevent multiple simultaneous fetches
+  if (loading.value || teamtailorLoading.value) {
+    console.log('Fetch already in progress, skipping...')
+    return
+  }
   
   loading.value = true
   teamtailorLoaded.value = false
@@ -617,9 +622,19 @@ onMounted(() => {
   fetchJobs()
 })
 
-// Watch for filter changes
+// Watch for filter changes with debounce to prevent multiple simultaneous calls
+let debounceTimer: NodeJS.Timeout | null = null
 watch([searchTerm, currentFilters, currentSource], () => {
-  fetchJobs()
+  // Clear any pending fetch
+  if (debounceTimer) {
+    clearTimeout(debounceTimer)
+  }
+  
+  // Debounce to prevent multiple rapid calls
+  debounceTimer = setTimeout(() => {
+    fetchJobs()
+    debounceTimer = null
+  }, 300)
 }, { deep: true })
 </script>
 
@@ -1064,11 +1079,25 @@ watch([searchTerm, currentFilters, currentSource], () => {
   cursor: pointer;
 }
 
-.loading-message {
-  text-align: center;
-  margin: 20px 0;
+.platsbanken-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  margin: 16px 0;
+  background-color: #ecfdf5;
+  border: 2px dashed #10b981;
+  border-radius: 8px;
   font-family: 'Inter', sans-serif;
-  font-size: 16px;
+  font-size: 15px;
+  color: #047857;
+  font-weight: 500;
+}
+
+.platsbanken-loading .loading-spinner {
+  border-color: #a7f3d0;
+  border-top-color: #10b981;
 }
 
 .no-jobs-message {

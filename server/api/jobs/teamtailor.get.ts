@@ -10,7 +10,7 @@ const xmlParser = new XMLParser({
 
 // Cache för att undvika att spamma företagens RSS-feeds
 const cache = new Map<string, { jobs: SimpleJob[], timestamp: number }>()
-const CACHE_TTL = 30 * 60 * 1000 // 30 minuter
+const CACHE_TTL = 60 * 60 * 1000 // 60 minuter (1 timme)
 
 export default defineEventHandler(async (event) => {
   try {
@@ -35,17 +35,21 @@ export default defineEventHandler(async (event) => {
     }
 
     const companies = getEnabledCompanies()
-    console.log(`Fetching jobs from ${companies.length} TeamTailor companies...`)
+    console.log(`🔄 Fetching jobs from ${companies.length} TeamTailor companies...`)
     
     const allJobs: SimpleJob[] = []
     const errors: { company: string, error: string }[] = []
 
     // Fetch jobs from all companies in parallel (with a limit to avoid overload)
-    const BATCH_SIZE = 5
+    const BATCH_SIZE = 10 // Increased from 5 to 10 for faster loading
+    const totalBatches = Math.ceil(companies.length / BATCH_SIZE)
+    
     for (let i = 0; i < companies.length; i += BATCH_SIZE) {
+      const currentBatch = Math.floor(i / BATCH_SIZE) + 1
       const batch = companies.slice(i, i + BATCH_SIZE)
       const batchPromises = batch.map(company => fetchCompanyJobs(company.name, getRSSFeedUrl(company)))
       
+      console.log(`📦 Processing batch ${currentBatch}/${totalBatches} (${batch.length} companies)...`)
       const results = await Promise.allSettled(batchPromises)
       
       results.forEach((result, index) => {
@@ -258,24 +262,59 @@ function transformRSSItemToJob(item: any, companyName: string): SimpleJob {
   const guid = item.guid || item.id || item.link
   const id = typeof guid === 'object' && guid['#text'] ? guid['#text'] : String(guid)
 
-  // Try to extract deadline from description
+  // Try to extract deadline from description - look for Swedish date patterns
   let applicationDeadline = ''
   const deadlinePatterns = [
     /sista ansökningsdag[:\s]+([0-9]{4}-[0-9]{2}-[0-9]{2})/i,
     /ansök senast[:\s]+([0-9]{4}-[0-9]{2}-[0-9]{2})/i,
+    /ansökan senast[:\s]+([0-9]{4}-[0-9]{2}-[0-9]{2})/i,
     /deadline[:\s]+([0-9]{4}-[0-9]{2}-[0-9]{2})/i,
-    /([0-9]{4}-[0-9]{2}-[0-9]{2})/i // Generic date pattern
+    /sista ansökningsdag[:\s]+([0-9]{1,2})\s+(januari|februari|mars|april|maj|juni|juli|augusti|september|oktober|november|december)/i,
+    /ansök senast[:\s]+([0-9]{1,2})\s+(januari|februari|mars|april|maj|juni|juli|augusti|september|oktober|november|december)/i,
   ]
   
   for (const pattern of deadlinePatterns) {
     const match = description.match(pattern)
     if (match && match[1]) {
-      const deadlineDate = new Date(match[1])
-      if (deadlineDate > new Date()) { // Only use future dates
-        applicationDeadline = match[1]
+      let deadlineDate: Date | null = null
+      
+      // Check if it's an ISO date (YYYY-MM-DD)
+      if (match[1].includes('-')) {
+        deadlineDate = new Date(match[1])
+      } 
+      // Check if it's a Swedish month format (e.g., "15 december")
+      else if (match[2]) {
+        const months: Record<string, number> = {
+          'januari': 0, 'februari': 1, 'mars': 2, 'april': 3,
+          'maj': 4, 'juni': 5, 'juli': 6, 'augusti': 7,
+          'september': 8, 'oktober': 9, 'november': 10, 'december': 11
+        }
+        const day = parseInt(match[1])
+        const month = months[match[2].toLowerCase()]
+        const year = new Date().getFullYear()
+        deadlineDate = new Date(year, month, day)
+        
+        // If the date is in the past, try next year
+        if (deadlineDate < new Date()) {
+          deadlineDate = new Date(year + 1, month, day)
+        }
+      }
+      
+      if (deadlineDate && !isNaN(deadlineDate.getTime()) && deadlineDate > new Date()) {
+        applicationDeadline = deadlineDate.toISOString().split('T')[0]
         break
       }
     }
+  }
+
+  // Get publication date - use pubDate or published, but DON'T fallback to current date
+  // If no date is available, use a very old date so it appears at the end when sorted
+  const pubDate = item.pubDate || item.published
+  const publicationDate = pubDate || '2020-01-01T00:00:00Z' // Old fallback date instead of today
+  
+  // Log warning if no publication date was found
+  if (!pubDate) {
+    console.warn(`No publication date found for job: ${item.title} from ${companyName}`)
   }
 
   return {
@@ -287,7 +326,7 @@ function transformRSSItemToJob(item: any, companyName: string): SimpleJob {
     region,
     description,
     employmentType: item['teamtailor:role'] || item['teamtailor:department'] || 'Ej specificerad',
-    publicationDate: item.pubDate || item.published || new Date().toISOString(),
+    publicationDate,
     applicationDeadline,
     applicationUrl: item.link || '',
     experienceRequired: false,
