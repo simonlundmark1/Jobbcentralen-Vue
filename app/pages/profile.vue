@@ -350,15 +350,54 @@ Jag fann er annons på _____ och det låter som något för mig. Jag har en bakg
 
 async function handleTestMatching() {
   try {
-    // Fetch ALL jobs to test against (from both Platsbanken and TeamTailor)
-    const response = await $fetch('/api/jobs/combined?limit=5000')
+    console.log('🎯 Hämtar alla jobb för matchning...')
+    const allFetchedJobs: any[] = []
     
-    if (response.success && response.data.jobs.length > 0) {
+    // Fetch from Platsbanken in batches (max 2000 per request)
+    console.log('📦 Hämtar jobb från Platsbanken...')
+    const platsbankenBatchSize = 2000
+    const maxPlatsbankenBatches = 10 // Up to 20000 jobs
+    
+    for (let i = 0; i < maxPlatsbankenBatches; i++) {
+      const offset = i * platsbankenBatchSize
+      const response = await $fetch(`/api/jobs/platsbanken?limit=${platsbankenBatchSize}&offset=${offset}`)
+      
+      if (response.success && response.data.jobs.length > 0) {
+        const jobsWithSource = response.data.jobs.map((job: any) => ({
+          ...job,
+          source: 'platsbanken' as const
+        }))
+        allFetchedJobs.push(...jobsWithSource)
+        console.log(`  Batch ${i + 1}: ${response.data.jobs.length} jobb (totalt Platsbanken: ${allFetchedJobs.length})`)
+        
+        // If we got fewer jobs than batch size, we've reached the end
+        if (response.data.jobs.length < platsbankenBatchSize) {
+          console.log('  ✅ Alla Platsbanken-jobb hämtade')
+          break
+        }
+      } else {
+        break
+      }
+    }
+    
+    // Fetch all TeamTailor jobs
+    console.log('📦 Hämtar jobb från TeamTailor...')
+    const teamtailorResponse = await $fetch('/api/jobs/teamtailor')
+    if (teamtailorResponse.success && teamtailorResponse.data.jobs.length > 0) {
+      const jobsWithSource = teamtailorResponse.data.jobs.map((job: any) => ({
+        ...job,
+        source: 'teamtailor' as const
+      }))
+      allFetchedJobs.push(...jobsWithSource)
+      console.log(`  ${teamtailorResponse.data.jobs.length} TeamTailor-jobb hämtade`)
+    }
+    
+    if (allFetchedJobs.length > 0) {
       // Import the job matching utilities
       const { calculateJobMatch, getMatchedJobs } = await import('../../utils/jobMatcher')
       
       // Calculate matches
-      const matches = getMatchedJobs(response.data.jobs, profile.value, 5)
+      const matches = getMatchedJobs(allFetchedJobs, profile.value, 5)
       
       console.group('🎯 Jobbmatchning Resultat')
       console.log('📊 Profil:', {
@@ -367,20 +406,20 @@ async function handleTestMatching() {
         preferredLocations: profile.value.preferredLocations,
         avoidKeywords: profile.value.avoidKeywords
       })
-      console.log(`📈 Totalt ${matches.length} matchande jobb av ${response.data.jobs.length} testade`)
+      console.log(`📈 Totalt ${matches.length} matchande jobb av ${allFetchedJobs.length} testade`)
       
       // Check sources distribution
-      const platsbankenJobs = response.data.jobs.filter(j => j.source === 'platsbanken').length
-      const teamtailorJobs = response.data.jobs.filter(j => j.source === 'teamtailor').length
+      const platsbankenJobs = allFetchedJobs.filter((j: any) => j.source === 'platsbanken').length
+      const teamtailorJobs = allFetchedJobs.filter((j: any) => j.source === 'teamtailor').length
       console.log(`📦 Källor: ${platsbankenJobs} från Platsbanken, ${teamtailorJobs} från TeamTailor`)
       
       // Find TeamTailor jobs with frontend/javascript/typescript
-      const techJobs = response.data.jobs.filter(j => {
+      const techJobs = allFetchedJobs.filter((j: any) => {
         const text = `${j.title} ${j.description}`.toLowerCase()
         return text.includes('frontend') || text.includes('javascript') || text.includes('typescript') || 
                text.includes('react') || text.includes('vue') || text.includes('developer')
       })
-      console.log(`🔧 Jobb med tech-termer: ${techJobs.length} av ${response.data.jobs.length}`)
+      console.log(`🔧 Jobb med tech-termer: ${techJobs.length} av ${allFetchedJobs.length}`)
       if (techJobs.length > 0) {
         console.log('📋 Exempel på tech-jobb som BORDE matcha:')
         techJobs.slice(0, 3).forEach(job => {
@@ -390,7 +429,7 @@ async function handleTestMatching() {
       
       // Debug: Show first 5 jobs with their content
       console.group('🔍 Debug: Första 5 jobben')
-      response.data.jobs.slice(0, 5).forEach((job, index) => {
+      allFetchedJobs.slice(0, 5).forEach((job: any, index: number) => {
         console.log(`\n${index + 1}. "${job.title}" - ${job.company}`)
         console.log('   📍 Källa:', job.source || 'okänd')
         console.log('   📝 Beskrivning längd:', job.description.length, 'tecken')

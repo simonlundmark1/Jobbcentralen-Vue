@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     
     // Build search parameters
     const searchParams: PlatsbankenSearchParams = {
-      limit: Math.min(parseInt(query.limit as string) || 20, 100), // Limit to max 100 for performance
+      limit: Math.min(parseInt(query.limit as string) || 20, 2000), // Increased max limit to 2000 (Platsbanken API max)
       offset: parseInt(query.offset as string) || 0,
     }
 

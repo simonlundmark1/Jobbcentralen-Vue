@@ -180,7 +180,18 @@
       </div>
       
       <div v-else-if="displayJobs.length === 0 && !teamtailorLoading" class="no-jobs-message">
-        <span v-if="showMatchedOnly">Inga matchande jobb hittades. Gå till profilen och lägg till skills och jobbtitlar.</span>
+        <span v-if="showMatchedOnly && profile.skills.length === 0 && profile.jobTitles.length === 0">
+          Ingen profil hittades. 
+          <NuxtLink to="/profile" style="color: #1B7C5A; text-decoration: underline;">Gå till profilen</NuxtLink> 
+          och lägg till skills och jobbtitlar för att se matchningar.
+        </span>
+        <span v-else-if="showMatchedOnly && allJobsForMatching.length === 0">
+          Laddar jobb för matchning... Klicka på knappen igen om inget händer.
+        </span>
+        <span v-else-if="showMatchedOnly">
+          Inga jobb matchade din profil. Prova att justera dina skills och jobbtitlar i 
+          <NuxtLink to="/profile" style="color: #1B7C5A; text-decoration: underline;">profilen</NuxtLink>.
+        </span>
         <span v-else>Inga jobb hittades med de valda filtren.</span>
       </div>
       
@@ -418,7 +429,9 @@ useHead({
 })
 
 // Get user profile for matching
-const { profile } = useProfile()
+const { profile, loadProfile } = useProfile()
+
+// Note: Profile loading is in the main onMounted below
 
 // Real API data
 const jobs = ref<SimpleJob[]>([])
@@ -484,13 +497,64 @@ const formatDate = (dateString: string) => {
   return date.toLocaleDateString('sv-SE')
 }
 
-// Load favorites from localStorage on mount
+// Load profile and favorites from localStorage on mount
 onMounted(() => {
+  // Load profile explicitly
+  loadProfile()
+  console.log('👤 Profil laddad:', {
+    skills: profile.value.skills,
+    jobTitles: profile.value.jobTitles,
+    hasSkills: profile.value.skills.length > 0,
+    hasJobTitles: profile.value.jobTitles.length > 0
+  })
+  
+  // Load favorites
   const saved = localStorage.getItem('favoriteJobs')
   if (saved) {
     favoriteJobs.value = JSON.parse(saved)
   }
 })
+
+// Debug function to compare search results with matched jobs
+// You can call this from browser console: window.compareJobLists()
+if (typeof window !== 'undefined') {
+  (window as any).compareJobLists = () => {
+    const currentJobs = jobs.value
+    const matchedJobs = allJobsForMatching.value
+    
+    console.group('📊 Jämförelse: Vanliga jobb vs Alla jobb för matchning')
+    console.log(`Vanliga jobb (från senaste sökning): ${currentJobs.length}`)
+    console.log(`Alla jobb för matchning: ${matchedJobs.length}`)
+    
+    // Find jobs in current search but not in matched
+    const currentIds = new Set(currentJobs.map(j => j.id))
+    const matchedIds = new Set(matchedJobs.map(j => j.id))
+    
+    const onlyInCurrent = currentJobs.filter(j => !matchedIds.has(j.id))
+    const onlyInMatched = matchedJobs.filter(j => !currentIds.has(j.id))
+    
+    console.log(`\n🔴 Jobb som finns i vanlig sökning men INTE i matchningslistan: ${onlyInCurrent.length}`)
+    if (onlyInCurrent.length > 0) {
+      onlyInCurrent.slice(0, 5).forEach((job, i) => {
+        console.log(`  ${i + 1}. "${job.title}" - ${job.company} (ID: ${job.id})`)
+      })
+    }
+    
+    console.log(`\n🟢 Jobb som finns i matchningslistan men INTE i vanlig sökning: ${onlyInMatched.length}`)
+    
+    // Check if current search jobs would match
+    console.log(`\n🎯 Matchningstest för vanliga jobb:`)
+    currentJobs.slice(0, 5).forEach((job, i) => {
+      const match = calculateJobMatch(job, profile.value)
+      console.log(`  ${i + 1}. "${job.title}" - ${match.matchScore} poäng`)
+      if (match.matchScore > 0) {
+        console.log(`     Anledningar: ${match.matchReasons.join(', ')}`)
+      }
+    })
+    
+    console.groupEnd()
+  }
+}
 
 // Computed property for all matched jobs (before pagination)
 const allMatchedJobs = computed(() => {
@@ -499,15 +563,29 @@ const allMatchedJobs = computed(() => {
   // Use all jobs for matching if available, otherwise use current jobs
   const jobsToMatch = allJobsForMatching.value.length > 0 ? allJobsForMatching.value : jobs.value
   
+  console.log(`🎯 Beräknar matchningar mot ${jobsToMatch.length} jobb...`)
+  
   // Calculate matches and filter jobs with score > 0
-  return jobsToMatch
+  const matched = jobsToMatch
     .map(job => ({
       job,
       match: calculateJobMatch(job, profile.value)
     }))
     .filter(item => item.match.matchScore > 0)
     .sort((a, b) => b.match.matchScore - a.match.matchScore)
-    .map(item => item.job)
+  
+  console.log(`✅ Hittade ${matched.length} matchande jobb`)
+  
+  // Show top 10 matches for debugging
+  if (matched.length > 0) {
+    console.log('🏆 Top 10 matchningar:')
+    matched.slice(0, 10).forEach((item, i) => {
+      console.log(`  ${i + 1}. "${item.job.title}" - ${item.job.company} (${item.match.matchScore} poäng)`)
+      console.log(`     Anledningar: ${item.match.matchReasons.join(', ')}`)
+    })
+  }
+  
+  return matched.map(item => item.job)
 })
 
 // Computed property for displaying jobs (with optional match filtering)
@@ -574,12 +652,106 @@ const toggleMatchedJobs = async () => {
   if (showMatchedOnly.value && allJobsForMatching.value.length === 0) {
     isLoadingMatchedJobs.value = true
     try {
-      console.log('🎯 Hämtar alla jobb för matchning...')
-      const response = await $fetch('/api/jobs/combined?limit=5000')
+      console.log('🎯 Hämtar jobb baserat på din profil...')
       
-      if (response.success) {
-        allJobsForMatching.value = response.data.jobs
-        console.log(`✅ Laddade ${allJobsForMatching.value.length} jobb för matchning`)
+      const allFetchedJobs: SimpleJob[] = []
+      const fetchedJobIds = new Set<string>() // Track job IDs to avoid duplicates
+      
+      // Build search queries from profile
+      const searchQueries: string[] = []
+      
+      // Add job titles as search queries
+      if (profile.value.jobTitles.length > 0) {
+        searchQueries.push(...profile.value.jobTitles)
+      }
+      
+      // Add all skills as search queries
+      if (profile.value.skills.length > 0) {
+        searchQueries.push(...profile.value.skills)
+      }
+      
+      // Check if we have any search queries
+      if (searchQueries.length === 0) {
+        console.warn('⚠️ Ingen profil hittades. Profil måste ha minst en skill eller jobbtitel.')
+        isLoadingMatchedJobs.value = false
+        return
+      }
+      
+      console.log(`📋 Söker med: ${searchQueries.join(', ')}`)
+      
+      // Fetch from Platsbanken using profile-based searches
+      console.log('📦 Hämtar jobb från Platsbanken...')
+      const platsbankenBatchSize = 100 // Use smaller batches when searching
+      
+      for (const query of searchQueries) {
+        console.log(`  🔍 Söker på: "${query}"`)
+        
+        // Fetch multiple pages for each query
+        for (let page = 0; page < 3; page++) { // Get 3 pages per search term
+          const offset = page * platsbankenBatchSize
+          const response = await $fetch(`/api/jobs/platsbanken?q=${encodeURIComponent(query)}&limit=${platsbankenBatchSize}&offset=${offset}`)
+          
+          if (response.success && response.data.jobs.length > 0) {
+            // Add only unique jobs
+            let newJobsCount = 0
+            response.data.jobs.forEach((job: SimpleJob) => {
+              if (!fetchedJobIds.has(job.id)) {
+                fetchedJobIds.add(job.id)
+                allFetchedJobs.push({
+                  ...job,
+                  source: 'platsbanken' as const
+                })
+                newJobsCount++
+              }
+            })
+            
+            if (newJobsCount > 0) {
+              console.log(`    Sida ${page + 1}: ${newJobsCount} nya jobb (totalt: ${allFetchedJobs.length})`)
+            }
+            
+            // If we got fewer jobs than batch size, no more pages
+            if (response.data.jobs.length < platsbankenBatchSize) {
+              break
+            }
+          } else {
+            break
+          }
+        }
+      }
+      
+      // Fetch all TeamTailor jobs
+      console.log('📦 Hämtar jobb från TeamTailor...')
+      const teamtailorResponse = await $fetch('/api/jobs/teamtailor')
+      if (teamtailorResponse.success && teamtailorResponse.data.jobs.length > 0) {
+        const jobsWithSource = teamtailorResponse.data.jobs.map((job: SimpleJob) => ({
+          ...job,
+          source: 'teamtailor' as const
+        }))
+        allFetchedJobs.push(...jobsWithSource)
+        console.log(`  ${teamtailorResponse.data.jobs.length} TeamTailor-jobb hämtade`)
+      }
+      
+      allJobsForMatching.value = allFetchedJobs
+      console.log(`✅ Totalt laddade ${allJobsForMatching.value.length} jobb för matchning`)
+      
+      // Log sources for debugging
+      const platsbankenCount = allFetchedJobs.filter(j => j.source === 'platsbanken').length
+      const teamtailorCount = allFetchedJobs.filter(j => j.source === 'teamtailor').length
+      console.log(`📊 Källor: ${platsbankenCount} från Platsbanken, ${teamtailorCount} från TeamTailor`)
+      
+      // Debug: Check for frontend jobs
+      const frontendJobs = allFetchedJobs.filter(j => {
+        const text = `${j.title} ${j.description}`.toLowerCase()
+        return text.includes('frontend')
+      })
+      console.log(`🔍 Debug: Hittade ${frontendJobs.length} jobb med "frontend" i titel/beskrivning`)
+      
+      // Show first 5 frontend jobs
+      if (frontendJobs.length > 0) {
+        console.log('📋 Första 5 frontend-jobben:')
+        frontendJobs.slice(0, 5).forEach((job, i) => {
+          console.log(`  ${i + 1}. "${job.title}" - ${job.company} (${job.source})`)
+        })
       }
     } catch (err) {
       console.error('Fel vid hämtning av jobb för matchning:', err)

@@ -714,7 +714,7 @@ function formatDate(dateString?: string): string {
   left: 1px;
   color: #000000;
   margin: 1px;
-  margin-top: 4rem;
+  margin-top: 5.5rem;
 }
 
 /* Clickable top-left-box */
@@ -761,6 +761,7 @@ function formatDate(dateString?: string): string {
 .match-badge-container {
   margin-right: auto;
   margin-left: 1rem;
+  margin-top: -1.2rem;
 }
 
 /* Mobile-only responsive design */

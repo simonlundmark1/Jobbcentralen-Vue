@@ -28,8 +28,9 @@ export default defineEventHandler(async (event) => {
     if (fetchPlatsbanken) {
       // Build Platsbanken query params
       const platsbankenParams = new URLSearchParams()
-      platsbankenParams.append('limit', '100') // Get more to allow filtering
-      platsbankenParams.append('offset', '0')
+      // Use the actual limit from query, not hardcoded 100
+      platsbankenParams.append('limit', limit.toString())
+      platsbankenParams.append('offset', offset.toString())
       if (searchQuery) platsbankenParams.append('q', searchQuery)
       if (municipality) {
         const municipalities = Array.isArray(municipality) ? municipality : [municipality]
