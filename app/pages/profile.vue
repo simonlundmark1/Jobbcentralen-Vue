@@ -146,6 +146,16 @@
             </div>
           </div>
 
+          <!-- Job Matching Section -->
+          <div class="profile-section">
+            <JobMatchingSection 
+              :profile="profile" 
+              :matching-jobs="[]"
+              @update:profile="profile = $event"
+              @test-matching="handleTestMatching"
+            />
+          </div>
+
           <!-- Cover Letter Section -->
           <div class="profile-section">
             <h2 class="section-title">Personligt Brev</h2>
@@ -207,6 +217,7 @@ import { ref, onMounted } from 'vue'
 import { useHead } from '#imports'
 import DocumentGenerator from '../../components/DocumentGenerator.vue'
 import NotificationToast from '../../components/NotificationToast.vue'
+import JobMatchingSection from '../../components/JobMatchingSection.vue'
 import { useProfile } from '../../composables/useProfile'
 import { useNotifications } from '../../composables/useNotifications'
 
@@ -335,6 +346,139 @@ Jag fann er annons på _____ och det låter som något för mig. Jag har en bakg
   
   profile.value.coverLetterTemplate = defaultTemplate
   success('Mall återställd till standard!', 'Återställd')
+}
+
+async function handleTestMatching() {
+  try {
+    // Fetch ALL jobs to test against (from both Platsbanken and TeamTailor)
+    const response = await $fetch('/api/jobs/combined?limit=5000')
+    
+    if (response.success && response.data.jobs.length > 0) {
+      // Import the job matching utilities
+      const { calculateJobMatch, getMatchedJobs } = await import('../../utils/jobMatcher')
+      
+      // Calculate matches
+      const matches = getMatchedJobs(response.data.jobs, profile.value, 5)
+      
+      console.group('🎯 Jobbmatchning Resultat')
+      console.log('📊 Profil:', {
+        skills: profile.value.skills,
+        jobTitles: profile.value.jobTitles,
+        preferredLocations: profile.value.preferredLocations,
+        avoidKeywords: profile.value.avoidKeywords
+      })
+      console.log(`📈 Totalt ${matches.length} matchande jobb av ${response.data.jobs.length} testade`)
+      
+      // Check sources distribution
+      const platsbankenJobs = response.data.jobs.filter(j => j.source === 'platsbanken').length
+      const teamtailorJobs = response.data.jobs.filter(j => j.source === 'teamtailor').length
+      console.log(`📦 Källor: ${platsbankenJobs} från Platsbanken, ${teamtailorJobs} från TeamTailor`)
+      
+      // Find TeamTailor jobs with frontend/javascript/typescript
+      const techJobs = response.data.jobs.filter(j => {
+        const text = `${j.title} ${j.description}`.toLowerCase()
+        return text.includes('frontend') || text.includes('javascript') || text.includes('typescript') || 
+               text.includes('react') || text.includes('vue') || text.includes('developer')
+      })
+      console.log(`🔧 Jobb med tech-termer: ${techJobs.length} av ${response.data.jobs.length}`)
+      if (techJobs.length > 0) {
+        console.log('📋 Exempel på tech-jobb som BORDE matcha:')
+        techJobs.slice(0, 3).forEach(job => {
+          console.log(`   - "${job.title}" från ${job.company} (${job.source})`)
+        })
+      }
+      
+      // Debug: Show first 5 jobs with their content
+      console.group('🔍 Debug: Första 5 jobben')
+      response.data.jobs.slice(0, 5).forEach((job, index) => {
+        console.log(`\n${index + 1}. "${job.title}" - ${job.company}`)
+        console.log('   📍 Källa:', job.source || 'okänd')
+        console.log('   📝 Beskrivning längd:', job.description.length, 'tecken')
+        console.log('   📝 Beskrivning (första 300 tecken):', job.description.substring(0, 300))
+        
+        // Check for "frontend" and common tech terms in description
+        const desc = job.description.toLowerCase()
+        const hasRelevantTerms = {
+          frontend: desc.includes('frontend') || desc.includes('front-end'),
+          javascript: desc.includes('javascript'),
+          typescript: desc.includes('typescript'),
+          react: desc.includes('react'),
+          vue: desc.includes('vue'),
+          developer: desc.includes('developer') || desc.includes('utvecklare')
+        }
+        console.log('   🔍 Innehåller:', hasRelevantTerms)
+        
+        const match = calculateJobMatch(job, profile.value)
+        console.log('   💯 Match Score:', match.matchScore, '- Reasons:', match.matchReasons.join(', ') || 'Inga')
+      })
+      console.groupEnd()
+      
+      if (matches.length > 0) {
+        console.log('🏆 Top 10 matchningar:')
+        matches.slice(0, 10).forEach((match, index) => {
+          console.log(`${index + 1}. "${match.job.title}" - ${match.job.company}`)
+          console.log(`   💯 Poäng: ${match.matchScore}`)
+          console.log(`   ✅ Anledningar: ${match.matchReasons.join(', ')}`)
+          console.log(`   📍 Plats: ${match.job.location}`)
+          
+          // Debug: Show snippet of description where match might be
+          if (match.matchReasons.length > 0) {
+            const desc = match.job.description.toLowerCase()
+            const title = match.job.title.toLowerCase()
+            console.log(`   📝 Titel (lowercase): "${title}"`)
+            console.log(`   📝 Beskrivning innehåller:`)
+            
+            // Check each reason
+            match.matchReasons.forEach(reason => {
+              if (reason.startsWith('Skill:')) {
+                const skill = reason.replace('Skill: ', '').toLowerCase()
+                const searchTerms = [skill, skill.replace(' ', '')]
+                
+                searchTerms.forEach(term => {
+                  if (desc.includes(term)) {
+                    const index = desc.indexOf(term)
+                    const snippet = desc.substring(Math.max(0, index - 30), Math.min(desc.length, index + term.length + 30))
+                    console.log(`      - "${term}": ...${snippet}...`)
+                  }
+                  if (title.includes(term)) {
+                    console.log(`      - "${term}" finns i TITELN: "${title}"`)
+                  }
+                })
+              }
+            })
+          }
+          
+          console.log('---')
+        })
+        
+        // Statistics
+        const excellent = matches.filter(m => m.matchScore >= 50).length
+        const good = matches.filter(m => m.matchScore >= 30 && m.matchScore < 50).length
+        const okay = matches.filter(m => m.matchScore >= 15 && m.matchScore < 30).length
+        
+        console.log('📊 Statistik:')
+        console.log(`   🌟 Utmärkta matchningar (50+ poäng): ${excellent}`)
+        console.log(`   ✨ Bra matchningar (30-49 poäng): ${good}`)
+        console.log(`   👍 Okej matchningar (15-29 poäng): ${okay}`)
+        
+        const avgScore = Math.round(matches.reduce((sum, m) => sum + m.matchScore, 0) / matches.length)
+        console.log(`   📈 Genomsnittlig poäng: ${avgScore}`)
+      } else {
+        console.log('❌ Inga matchningar hittades. Prova att:')
+        console.log('   • Lägg till fler skills')
+        console.log('   • Lägg till jobbtitlar')
+        console.log('   • Kontrollera stavning')
+      }
+      console.groupEnd()
+      
+      success(`Hittade ${matches.length} matchande jobb! Kolla konsolen för detaljer.`, 'Matchning testad')
+    } else {
+      warning('Kunde inte hämta jobb för test', 'Fel')
+    }
+  } catch (err) {
+    console.error('Fel vid testning av matchning:', err)
+    error('Kunde inte testa matchning. Försök igen.', 'Fel')
+  }
 }
 
 async function generateCoverLetter() {

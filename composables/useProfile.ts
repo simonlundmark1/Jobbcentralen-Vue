@@ -9,6 +9,11 @@ export interface Profile {
   summary: string
   cvFile: File | null
   coverLetterTemplate: string
+  // Job matching fields
+  skills: string[]
+  jobTitles: string[]
+  preferredLocations: string[]
+  avoidKeywords: string[]
 }
 
 const defaultCoverLetterTemplate = `Hej _____!
@@ -40,7 +45,11 @@ export const useProfile = () => {
             address: parsed.address || '',
             summary: parsed.summary || '',
             cvFile: null,
-            coverLetterTemplate: parsed.coverLetterTemplate || defaultCoverLetterTemplate
+            coverLetterTemplate: parsed.coverLetterTemplate || defaultCoverLetterTemplate,
+            skills: parsed.skills || [],
+            jobTitles: parsed.jobTitles || [],
+            preferredLocations: parsed.preferredLocations || [],
+            avoidKeywords: parsed.avoidKeywords || []
           }
         } catch (error) {
           console.error('Error loading profile during initialization:', error)
@@ -57,7 +66,11 @@ export const useProfile = () => {
       address: '',
       summary: '',
       cvFile: null,
-      coverLetterTemplate: defaultCoverLetterTemplate
+      coverLetterTemplate: defaultCoverLetterTemplate,
+      skills: [],
+      jobTitles: [],
+      preferredLocations: [],
+      avoidKeywords: []
     }
   })
 

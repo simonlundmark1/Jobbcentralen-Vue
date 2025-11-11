@@ -301,7 +301,23 @@ const filteredOccupationFields = computed(() => {
 
 const filteredMunicipalities = computed(() => {
   if (!municipality.value) {
-    return filterOptions.value.municipalities.slice(0, 10) // Show top 10 when empty
+    // Show Sweden's 10 largest cities in order when dropdown is empty
+    const swedenLargestCities = [
+      'Stockholm',
+      'Göteborg', 
+      'Malmö',
+      'Uppsala',
+      'Västerås',
+      'Örebro',
+      'Linköping',
+      'Helsingborg',
+      'Jönköping',
+      'Norrköping'
+    ]
+    
+    // Filter to only show cities that are available in the API response
+    const availableCities = filterOptions.value.municipalities
+    return swedenLargestCities.filter(city => availableCities.includes(city))
   }
   
   const query = municipality.value.toLowerCase()

@@ -196,6 +196,7 @@ export interface SimpleJob {
   workingHours?: string
   experienceRequired: boolean
   coordinates?: [number, number]
+  source?: 'platsbanken' | 'teamtailor'
 }
 
 // Filter options for the UI

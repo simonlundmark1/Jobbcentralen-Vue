@@ -105,6 +105,17 @@
                 </svg>
                 TeamTailor
               </button>
+              
+              <button 
+                @click="toggleMatchedJobs"
+                :class="['source-filter-btn', 'matched', showMatchedOnly ? 'active' : '']"
+                title="Visa endast matchande jobb"
+              >
+                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                Mina matchningar
+              </button>
             </div>
             
             <!-- Dynamic Filters -->
@@ -162,13 +173,15 @@
       </div>
 
       <!-- Job Results -->
-      <div v-if="loading" class="platsbanken-loading">
+      <div v-if="loading || isLoadingMatchedJobs" class="platsbanken-loading">
         <div class="loading-spinner"></div>
-        <span>Laddar jobb från Platsbanken...</span>
+        <span v-if="isLoadingMatchedJobs">Laddar alla jobb för matchning...</span>
+        <span v-else>Laddar jobb från Platsbanken...</span>
       </div>
       
       <div v-else-if="displayJobs.length === 0 && !teamtailorLoading" class="no-jobs-message">
-        Inga jobb hittades med de valda filtren.
+        <span v-if="showMatchedOnly">Inga matchande jobb hittades. Gå till profilen och lägg till skills och jobbtitlar.</span>
+        <span v-else>Inga jobb hittades med de valda filtren.</span>
       </div>
       
       <div v-else class="jobs-list">
@@ -188,12 +201,26 @@
           <span>Laddar jobb från TeamTailor...</span>
         </div>
         
-        <!-- Load More Button -->
-        <div v-if="hasMoreJobs && teamtailorLoaded" class="load-more-container">
+        <!-- Load More Button (for regular jobs) -->
+        <div v-if="!showMatchedOnly && hasMoreJobs && teamtailorLoaded" class="load-more-container">
           <button @click="loadMoreJobs" :disabled="loading" class="load-more-btn">
             <span v-if="loading">Laddar...</span>
             <span v-else>Ladda fler jobb ({{ remainingJobs }} kvar)</span>
           </button>
+        </div>
+        
+        <!-- Matched jobs info and load more -->
+        <div v-if="showMatchedOnly && displayJobs.length > 0" class="matched-jobs-section">
+          <div class="matched-jobs-info">
+            <p>Visar {{ displayJobs.length }} av {{ allMatchedJobs.length }} matchande jobb</p>
+          </div>
+          
+          <!-- Load More Button for matched jobs -->
+          <div v-if="hasMoreMatchedJobs" class="load-more-container">
+            <button @click="loadMoreMatchedJobs" class="load-more-btn">
+              Ladda fler matchningar ({{ allMatchedJobs.length - matchedJobsLimit }} kvar)
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -378,6 +405,8 @@ import { useHead } from '#imports'
 import SearchFilters from '../../components/SearchFilters.vue'
 import JobItem from '../../components/JobItem.vue'
 import type { SimpleJob } from '../../types/platsbanken'
+import { calculateJobMatch } from '../../utils/jobMatcher'
+import { useProfile } from '../../composables/useProfile'
 
 // Page metadata
 useHead({
@@ -388,6 +417,9 @@ useHead({
   ]
 })
 
+// Get user profile for matching
+const { profile } = useProfile()
+
 // Real API data
 const jobs = ref<SimpleJob[]>([])
 const loading = ref(false)
@@ -397,6 +429,10 @@ const currentPage = ref(1)
 const totalJobs = ref(0)
 const favoriteJobs = ref<SimpleJob[]>([])
 const showFavorites = ref(false)
+const showMatchedOnly = ref(false)
+const allJobsForMatching = ref<SimpleJob[]>([])
+const isLoadingMatchedJobs = ref(false)
+const matchedJobsLimit = ref(50)
 const searchTerm = ref('')
 const sortBy = ref('latest')
 const currentFilters = ref({
@@ -456,10 +492,44 @@ onMounted(() => {
   }
 })
 
-// Computed property for displaying jobs (no filtering here since API handles it)
+// Computed property for all matched jobs (before pagination)
+const allMatchedJobs = computed(() => {
+  if (!showMatchedOnly.value) return []
+  
+  // Use all jobs for matching if available, otherwise use current jobs
+  const jobsToMatch = allJobsForMatching.value.length > 0 ? allJobsForMatching.value : jobs.value
+  
+  // Calculate matches and filter jobs with score > 0
+  return jobsToMatch
+    .map(job => ({
+      job,
+      match: calculateJobMatch(job, profile.value)
+    }))
+    .filter(item => item.match.matchScore > 0)
+    .sort((a, b) => b.match.matchScore - a.match.matchScore)
+    .map(item => item.job)
+})
+
+// Computed property for displaying jobs (with optional match filtering)
 const displayJobs = computed(() => {
+  // Filter by matched jobs if enabled
+  if (showMatchedOnly.value) {
+    // Return paginated matched jobs
+    return allMatchedJobs.value.slice(0, matchedJobsLimit.value)
+  }
+  
   return jobs.value
 })
+
+// Check if there are more matched jobs to load
+const hasMoreMatchedJobs = computed(() => {
+  return showMatchedOnly.value && allMatchedJobs.value.length > matchedJobsLimit.value
+})
+
+// Function to load more matched jobs
+const loadMoreMatchedJobs = () => {
+  matchedJobsLimit.value += 50
+}
 
 const handleSearch = (term: string) => {
   searchTerm.value = term
@@ -490,6 +560,33 @@ const setSource = (source: 'all' | 'platsbanken' | 'teamtailor') => {
   currentPage.value = 1
   currentOffset.value = 0
   fetchJobs()
+}
+
+const toggleMatchedJobs = async () => {
+  showMatchedOnly.value = !showMatchedOnly.value
+  
+  // Reset limit when toggling
+  if (showMatchedOnly.value) {
+    matchedJobsLimit.value = 50
+  }
+  
+  // When enabling matched jobs, fetch all jobs for matching
+  if (showMatchedOnly.value && allJobsForMatching.value.length === 0) {
+    isLoadingMatchedJobs.value = true
+    try {
+      console.log('🎯 Hämtar alla jobb för matchning...')
+      const response = await $fetch('/api/jobs/combined?limit=5000')
+      
+      if (response.success) {
+        allJobsForMatching.value = response.data.jobs
+        console.log(`✅ Laddade ${allJobsForMatching.value.length} jobb för matchning`)
+      }
+    } catch (err) {
+      console.error('Fel vid hämtning av jobb för matchning:', err)
+    } finally {
+      isLoadingMatchedJobs.value = false
+    }
+  }
 }
 
 // Computed properties for pagination
@@ -796,6 +893,11 @@ watch([searchTerm, currentFilters, currentSource], () => {
 .source-filter-btn.teamtailor.active {
   background-color: #8b5cf6;
   border-color: #8b5cf6;
+}
+
+.source-filter-btn.matched.active {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
 }
 
 .source-filter-btn svg {
@@ -1172,6 +1274,27 @@ watch([searchTerm, currentFilters, currentSource], () => {
 .load-more-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.matched-jobs-section {
+  margin: 24px 0;
+}
+
+.matched-jobs-info {
+  text-align: center;
+  padding: 16px 24px;
+  margin-bottom: 16px;
+  background-color: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+}
+
+.matched-jobs-info p {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #166534;
+  margin: 0;
 }
 
 /* Mobile Menu */

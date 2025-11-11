@@ -13,6 +13,15 @@
     
     <!-- Action Buttons Row -->
     <div class="action-buttons">
+      <!-- Match Badge -->
+      <div v-if="jobMatch.matchScore > 0" class="match-badge-container">
+        <JobMatchBadge 
+          :match-score="jobMatch.matchScore" 
+          :match-reasons="jobMatch.matchReasons"
+          :show-reasons="isExpanded"
+        />
+      </div>
+      
       <button @click="toggleExpanded" class="expand-btn">
         <span v-if="!isExpanded">Visa mer</span>
         <span v-else>Visa mindre</span>
@@ -144,6 +153,8 @@
 import { computed, ref } from 'vue'
 import type { SimpleJob } from '../types/platsbanken'
 import { useProfile } from '../composables/useProfile'
+import { calculateJobMatch } from '../utils/jobMatcher'
+import JobMatchBadge from './JobMatchBadge.vue'
 
 interface Props {
   job: SimpleJob
@@ -162,6 +173,14 @@ const emit = defineEmits<Emits>()
 
 // Get profile from global state
 const { profile } = useProfile()
+
+// Calculate job match
+const jobMatch = computed(() => {
+  if (!profile.value.skills.length && !profile.value.jobTitles.length) {
+    return { matchScore: 0, matchReasons: [] }
+  }
+  return calculateJobMatch(props.job, profile.value)
+})
 
 // Component state
 const isExpanded = ref(false)
@@ -735,13 +754,13 @@ function formatDate(dateString?: string): string {
   font-family: 'Inter', sans-serif;
   font-weight: 400;
   font-size: 14px;
-  text-align: left;
-  line-height: 118%;
-  letter-spacing: -0.02em;
-  margin-left: 9px;
-  margin-top: 30px;
-  color: grey;
-  margin-bottom: 0;
+  color: black;
+  margin: 0 0 0 1rem;
+}
+
+.match-badge-container {
+  margin-right: auto;
+  margin-left: 1rem;
 }
 
 /* Mobile-only responsive design */
