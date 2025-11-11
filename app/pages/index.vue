@@ -552,9 +552,11 @@ const fetchJobs = async (append = false) => {
       if (platsbankenResponse.success) {
         if (append) {
           jobs.value.push(...platsbankenResponse.data.jobs)
+          console.log(`Loaded ${platsbankenResponse.data.jobs.length} more Platsbanken jobs (total: ${jobs.value.length})`)
         } else {
           jobs.value = platsbankenResponse.data.jobs
           currentOffset.value = 0
+          console.log(`Initial load: ${platsbankenResponse.data.jobs.length} Platsbanken jobs`)
         }
         platsbankenTotal = platsbankenResponse.data.total
         totalJobs.value = platsbankenTotal
@@ -588,6 +590,8 @@ const fetchJobs = async (append = false) => {
           jobs.value.push(...newJobs)
           totalJobs.value = platsbankenTotal + teamtailorResponse.data.total
           
+          console.log(`Loaded ${newJobs.length} TeamTailor jobs (total: ${jobs.value.length}, available: ${totalJobs.value})`)
+          
           // Sort by publication date (newest first)
           jobs.value.sort((a, b) => {
             const dateA = new Date(a.publicationDate).getTime()
@@ -614,6 +618,8 @@ const fetchJobs = async (append = false) => {
 // Load more jobs function
 const loadMoreJobs = () => {
   if (loading.value || !hasMoreJobs.value) return
+  currentOffset.value += jobsPerPage
+  console.log('Loading more jobs, new offset:', currentOffset.value)
   fetchJobs(true)
 }
 

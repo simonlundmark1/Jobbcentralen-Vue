@@ -10,7 +10,7 @@ const xmlParser = new XMLParser({
 
 // Cache för att undvika att spamma företagens RSS-feeds
 const cache = new Map<string, { jobs: SimpleJob[], timestamp: number }>()
-const CACHE_TTL = 60 * 60 * 1000 // 60 minuter (1 timme)
+const CACHE_TTL = 10 * 60 * 1000 // 10 minuter (minskad från 60 för fräschare jobb)
 
 export default defineEventHandler(async (event) => {
   try {
@@ -66,29 +66,40 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    console.log(`Successfully fetched ${allJobs.length} jobs from TeamTailor`)
+    console.log(`Successfully fetched ${allJobs.length} jobs from TeamTailor (before deduplication)`)
     if (errors.length > 0) {
       console.warn(`Failed to fetch from ${errors.length} companies:`, errors)
     }
 
+    // Deduplicate jobs based on ID (some companies may post the same job multiple times)
+    const uniqueJobs = new Map<string, SimpleJob>()
+    allJobs.forEach(job => {
+      if (!uniqueJobs.has(job.id)) {
+        uniqueJobs.set(job.id, job)
+      }
+    })
+    const deduplicatedJobs = Array.from(uniqueJobs.values())
+    
+    console.log(`After deduplication: ${deduplicatedJobs.length} unique jobs (removed ${allJobs.length - deduplicatedJobs.length} duplicates)`)
+
     // Sort by publication date (newest first)
-    allJobs.sort((a, b) => {
+    deduplicatedJobs.sort((a, b) => {
       const dateA = new Date(a.publicationDate).getTime()
       const dateB = new Date(b.publicationDate).getTime()
       return dateB - dateA // Newest first
     })
 
-    // Update cache
+    // Update cache with deduplicated jobs
     cache.set('all_jobs', {
-      jobs: allJobs,
+      jobs: deduplicatedJobs,
       timestamp: Date.now()
     })
 
     return {
       success: true,
       data: {
-        jobs: allJobs,
-        total: allJobs.length,
+        jobs: deduplicatedJobs,
+        total: deduplicatedJobs.length,
         source: 'teamtailor',
         errors: errors.length > 0 ? errors : undefined
       }
@@ -144,8 +155,10 @@ async function fetchCompanyJobs(companyName: string, rssUrl: string): Promise<Si
       return []
     }
 
-    // Transform RSS items to SimpleJob format
-    const jobs: SimpleJob[] = items.map((item) => transformRSSItemToJob(item, companyName))
+    // Transform RSS items to SimpleJob format (filter out nulls from non-Swedish jobs)
+    const jobs: SimpleJob[] = items
+      .map((item) => transformRSSItemToJob(item, companyName))
+      .filter((job): job is SimpleJob => job !== null)
     
     console.log(`Fetched ${jobs.length} jobs from ${companyName}`)
     return jobs
@@ -157,9 +170,82 @@ async function fetchCompanyJobs(companyName: string, rssUrl: string): Promise<Si
 }
 
 /**
+ * Detect if text is in Swedish or acceptable for Swedish job board
+ */
+function isSwedishJob(title: string, description: string, location: string): boolean {
+  const text = `${title} ${description} ${location}`.toLowerCase()
+  
+  // Norwegian indicators (most common issue)
+  const norwegianPatterns = [
+    /\bsøker\b/, /\bog\b.*\bpå\b/, /\bgjerne\b/, /\bhar du\b/, /\bå\b.*\bstå\b/,
+    /\bmeningsfylt\b/, /\bpålitelig\b/, /\brolig\b/, /\bjakt\b.*\better\b/,
+    /\bgutt\b/, /\bjente\b/, /\bassistent(er)?\s+(til|søkes)\b/,
+    /\bmulighet for\b/, /\berfaring med\b/, /\bansvar for\b/
+  ]
+  
+  // Danish indicators
+  const danishPatterns = [
+    /\bhvor\b.*\bkan\b/, /\bvil du\b/, /\bvi søger\b/, /\bdin\s+rolle\b/,
+    /\bmulighed\s+for\b/, /\barbejde\s+med\b/
+  ]
+  
+  // Finnish indicators  
+  const finnishPatterns = [
+    /\betsitkö\b/, /\bhaluatko\b/, /\bmeitä\b/, /\bsinua\b/,
+    /\btyöpaikka\b/, /\bhakemuksesi\b/
+  ]
+  
+  // German indicators
+  const germanPatterns = [
+    /\b(w\/m\/d)\b/, /\btechniker:in\b/, /\bsuchen\s+wir\b/,
+    /\bunser(e|em|en)\b/, /\bsie\s+(sind|haben|bringen)\b/,
+    /\bmitarbeiter\b/, /\bstelle\b.*\banästhesie\b/
+  ]
+  
+  // Dutch indicators
+  const dutchPatterns = [
+    /\bvacature\b/, /\bzij\s+je\b/, /\bwerk(en)?\s+bij\b/,
+    /\bwij\s+zoeken\b/, /\bje\s+bent\b/, /\boperations\s+partner\b/
+  ]
+  
+  // Check for non-Swedish patterns
+  const hasNorwegian = norwegianPatterns.some(p => p.test(text))
+  const hasDanish = danishPatterns.some(p => p.test(text))
+  const hasFinnish = finnishPatterns.some(p => p.test(text))
+  const hasGerman = germanPatterns.some(p => p.test(text))
+  const hasDutch = dutchPatterns.some(p => p.test(text))
+  
+  // Check for non-Swedish locations
+  const hasNonSwedishLocation = /\b(oslo|bergen|trondheim|stavanger|kristiansand|tromsø|drammen|fredrikstad|thun|bern|zürich|amsterdam|rotterdam|copenhagen|københavn|helsinki|espoo|tampere)\b/i.test(location)
+  
+  // Reject if any non-Swedish patterns found
+  if (hasNorwegian || hasDanish || hasFinnish || hasGerman || hasDutch || hasNonSwedishLocation) {
+    return false
+  }
+  
+  // Accept if it has Swedish indicators OR Swedish location
+  const swedishPatterns = [
+    /\bsöker\b/, /\bvi söker\b/, /\btjänst\b/, /\blanseringsdag\b/,
+    /\berfarenhet av\b/, /\bkunskap i\b/, /\bansök\b/, /\banställning\b/,
+    /\bstockholm\b/, /\bgöteborg\b/, /\bmalmö\b/, /\buppsala\b/,
+    /\blund\b/, /\blinköping\b/, /\bväster(å|aa)s\b/, /\börebro\b/
+  ]
+  
+  const hasSwedish = swedishPatterns.some(p => p.test(text))
+  
+  // If no clear Swedish indicators but no non-Swedish either, accept (might be English/International in Sweden)
+  // But require at least "Sweden" or a Swedish city to be mentioned
+  if (!hasSwedish) {
+    return /\b(sweden|sverige|swedish)\b/i.test(text)
+  }
+  
+  return true
+}
+
+/**
  * Transform TeamTailor RSS item to our SimpleJob format
  */
-function transformRSSItemToJob(item: any, companyName: string): SimpleJob {
+function transformRSSItemToJob(item: any, companyName: string): SimpleJob | null {
   // Extract description first - keep full description with formatting
   let description = item.description || item.summary || ''
   if (typeof description === 'string') {
@@ -258,9 +344,11 @@ function transformRSSItemToJob(item: any, companyName: string): SimpleJob {
     location = location ? `${location} (Remote)` : 'Remote'
   }
 
-  // Generate a unique ID from the GUID or link
+  // Generate a unique ID from the GUID or link + company name to avoid duplicates
   const guid = item.guid || item.id || item.link
-  const id = typeof guid === 'object' && guid['#text'] ? guid['#text'] : String(guid)
+  const guidStr = typeof guid === 'object' && guid['#text'] ? guid['#text'] : String(guid)
+  // Include company name in ID to ensure uniqueness even if same GUID appears in multiple feeds
+  const id = `${companyName}::${guidStr}`
 
   // Try to extract deadline from description - look for Swedish date patterns
   let applicationDeadline = ''
@@ -317,9 +405,17 @@ function transformRSSItemToJob(item: any, companyName: string): SimpleJob {
     console.warn(`No publication date found for job: ${item.title} from ${companyName}`)
   }
 
+  const title = item.title || 'Untitled Position'
+  
+  // Filter out non-Swedish jobs
+  if (!isSwedishJob(title, description, location)) {
+    console.log(`Filtering out non-Swedish job: "${title}" from ${companyName} (${location})`)
+    return null
+  }
+  
   return {
     id: `tt_${Buffer.from(id).toString('base64').substring(0, 20)}`,
-    title: item.title || 'Untitled Position',
+    title,
     company: companyName,
     location,
     municipality,

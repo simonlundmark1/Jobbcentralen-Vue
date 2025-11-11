@@ -1,6 +1,6 @@
 {
   "discoveredAt": "2025-11-03T09:58:12.989Z",
-  "count": 238,
+  "count": 236,
   "newCompaniesFound": 0,
   "companies": [
     {
@@ -797,13 +797,6 @@
       "enabled": true
     },
     {
-      "name": "Gränsö Slott",
-      "careerSiteUrl": "https://gransoslott.teamtailor.com/",
-      "rssUrl": "https://gransoslott.teamtailor.com/jobs.rss",
-      "jobCount": 1,
-      "enabled": true
-    },
-    {
       "name": "Guestit AB",
       "careerSiteUrl": "https://guestitab.teamtailor.com/",
       "rssUrl": "https://guestitab.teamtailor.com/jobs.rss",
@@ -1187,13 +1180,6 @@
       "careerSiteUrl": "https://metria.teamtailor.com/",
       "rssUrl": "https://metria.teamtailor.com/jobs.rss",
       "jobCount": 2,
-      "enabled": true
-    },
-    {
-      "name": "Mio BPA",
-      "careerSiteUrl": "https://miogruppen.teamtailor.com/",
-      "rssUrl": "https://miogruppen.teamtailor.com/jobs.rss",
-      "jobCount": 100,
       "enabled": true
     },
     {
@@ -1615,5 +1601,6 @@
       "rssUrl": "https://www.citygross.se/jobs.rss",
       "enabled": true
     }
-  ]
+  ],
+  "filteredAt": "2025-11-11T09:13:12.162Z"
 }
