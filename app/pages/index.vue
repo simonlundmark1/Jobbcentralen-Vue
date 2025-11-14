@@ -1107,37 +1107,38 @@ watch([searchTerm, currentFilters, currentSource], () => {
   box-sizing: border-box;
   overflow: hidden;
   position: relative;
+  box-shadow: inset 0 0 0 6px white;
 }
 
 /* Diagonal background - blends green and white */
 .results-bar::before {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: 6px;
   pointer-events: none;
   transition: background 0.3s ease;
   z-index: 1;
 }
 
-/* Left side active - diagonal white from left, green on right */
+/* Left side active - diagonal green from left, white on right */
 .results-bar.left-active::before {
-  background: linear-gradient(
-    45deg,
-    white 0%,
-    white 70%,
-    #1D6453 30%,
-    #1D6453 100%
-  );
-}
-
-/* Right side active - diagonal green on left, white from right */
-.results-bar.right-active::before {
   background: linear-gradient(
     135deg,
     #1D6453 0%,
     #1D6453 70%,
     white 30%,
     white 100%
+  );
+}
+
+/* Right side active - diagonal white on left, green from right */
+.results-bar.right-active::before {
+  background: linear-gradient(
+    135deg,
+    white 0%,
+    white 70%,
+    #1D6453 30%,
+    #1D6453 100%
   );
 }
 
@@ -1167,86 +1168,41 @@ watch([searchTerm, currentFilters, currentSource], () => {
   min-width: 250px;
 }
 
-/* Active section - dark text on white background */
 .results-bar-section.active .results-count,
 .results-bar-section.active .sort-label {
-  color: #333;
-}
-
-.results-bar-section.active .matched-tab-btn {
-  color: #333;
-}
-
-/* Inactive section on green background - white text */
-.results-bar.left-active .right-section .matched-tab-btn,
-.results-bar.right-active .left-section .results-count,
-.results-bar.right-active .left-section .sort-label {
   color: white;
 }
 
 .results-bar-section.active .sort-select {
   background-color: white;
-  border-color: #333;
+  border-color: white;
   color: #333;
 }
 
 .results-bar-section.active .filter-tag {
-  background-color: #1D6453;
-  color: white;
-  border-color: #1D6453;
-}
-
-.results-bar-section.active .filter-remove {
-  color: white;
-}
-
-.results-bar-section.active .source-filter-btn {
-  background-color: rgba(29, 100, 83, 0.2);
-  color: #333;
-  border-color: rgba(29, 100, 83, 0.3);
-}
-
-.results-bar-section.active .source-filter-btn:hover {
-  background-color: rgba(29, 100, 83, 0.3);
-}
-
-.results-bar-section.active .source-filter-btn.active {
-  background-color: #1D6453;
-  color: white;
-  border-color: #1D6453;
-}
-
-/* Inactive section source filter buttons on green background */
-.results-bar.right-active .left-section .source-filter-btn {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.results-bar.right-active .left-section .source-filter-btn.active {
-  background-color: white;
-  color: #1D6453;
-  border-color: white;
-}
-
-.results-bar.right-active .left-section .filter-tag {
   background-color: rgba(255, 255, 255, 0.9);
   color: #1D6453;
   border-color: rgba(255, 255, 255, 0.9);
 }
 
-.results-bar.right-active .left-section .filter-remove {
+.results-bar-section.active .filter-remove {
   color: #1D6453;
 }
 
-.results-bar.left-active .right-section .matched-count {
-  color: white;
+.results-bar-section.active .source-filter-btn {
   background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
-.results-bar.right-active .right-section .matched-count {
-  color: #333;
-  background-color: rgba(29, 100, 83, 0.15);
+.results-bar-section.active .source-filter-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.results-bar-section.active .source-filter-btn.active {
+  background-color: white;
+  color: #1D6453;
+  border-color: white;
 }
 
 .matched-section-content {
@@ -1268,7 +1224,7 @@ watch([searchTerm, currentFilters, currentSource], () => {
   font-family: 'Inter', sans-serif;
   font-size: 15px;
   font-weight: 600;
-  color: #333;
+  color: #64748b;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -1279,6 +1235,11 @@ watch([searchTerm, currentFilters, currentSource], () => {
   flex-shrink: 0;
 }
 
+.results-bar-section.active .matched-tab-btn {
+  color: white;
+  font-size: 16px;
+}
+
 .matched-tab-btn:hover {
   opacity: 0.8;
 }
@@ -1287,8 +1248,8 @@ watch([searchTerm, currentFilters, currentSource], () => {
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 500;
-  color: #333;
-  background-color: rgba(29, 100, 83, 0.15);
+  color: white;
+  background-color: rgba(255, 255, 255, 0.2);
   padding: 4px 12px;
   border-radius: 12px;
 }
