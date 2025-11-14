@@ -65,102 +65,113 @@
 
       <!-- Results Bar -->
       <div class="results-bar">
-        <div class="results-info">
-          <span class="results-count">Hittade {{ totalJobs }} jobb</span>
-          
-          <!-- Active Filters -->
-          <div class="active-filters">
-            <!-- Source Filter Buttons -->
-            <div class="source-filters">
-              <button 
-                @click="setSource('all')"
-                :class="['source-filter-btn', currentSource === 'all' ? 'active' : '']"
-                title="Visa alla jobb"
-              >
-                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
-                </svg>
-                Alla
-              </button>
+        <!-- Left Section: Platsbanken/Teamtailor -->
+        <div :class="['results-bar-section', 'left-section', !showMatchedOnly ? 'active' : '']" @click="deactivateMatchedJobs">
+          <div class="results-info">
+            <span class="results-count">Hittade {{ totalJobs }} jobb</span>
+            
+            <!-- Active Filters -->
+            <div class="active-filters">
+              <!-- Source Filter Buttons -->
+              <div class="source-filters">
+                <button 
+                  @click.stop="setSource('all')"
+                  :class="['source-filter-btn', currentSource === 'all' ? 'active' : '']"
+                  title="Visa alla jobb"
+                >
+                  <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                  </svg>
+                  Alla
+                </button>
+                
+                <button 
+                  @click.stop="setSource('platsbanken')"
+                  :class="['source-filter-btn', 'platsbanken', currentSource === 'platsbanken' ? 'active' : '']"
+                  title="Endast Platsbanken"
+                >
+                  <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
+                  </svg>
+                  Platsbanken
+                </button>
+                
+                <button 
+                  @click.stop="setSource('teamtailor')"
+                  :class="['source-filter-btn', 'teamtailor', currentSource === 'teamtailor' ? 'active' : '']"
+                  title="Endast TeamTailor"
+                >
+                  <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"/>
+                  </svg>
+                  TeamTailor
+                </button>
+              </div>
+            
+              <!-- Dynamic Filters -->
+              <div v-if="currentFilters.occupationField" class="filter-tag">
+                <span class="filter-text">{{ currentFilters.occupationField }}</span>
+                <button @click.stop="removeFilter('occupationField')" class="filter-remove">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
+                    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </button>
+              </div>
               
-              <button 
-                @click="setSource('platsbanken')"
-                :class="['source-filter-btn', 'platsbanken', currentSource === 'platsbanken' ? 'active' : '']"
-                title="Endast Platsbanken"
-              >
-                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
-                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
-                </svg>
-                Platsbanken
-              </button>
+              <div v-if="currentFilters.municipality" class="filter-tag">
+                <span class="filter-text">{{ currentFilters.municipality }}</span>
+                <button @click.stop="removeFilter('municipality')" class="filter-remove">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
+                    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </button>
+              </div>
               
-              <button 
-                @click="setSource('teamtailor')"
-                :class="['source-filter-btn', 'teamtailor', currentSource === 'teamtailor' ? 'active' : '']"
-                title="Endast TeamTailor"
-              >
-                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"/>
-                </svg>
-                TeamTailor
-              </button>
+              <div v-if="currentFilters.workTimeExtent" class="filter-tag">
+                <span class="filter-text">{{ currentFilters.workTimeExtent }}</span>
+                <button @click.stop="removeFilter('workTimeExtent')" class="filter-remove">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
+                    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </button>
+              </div>
               
-              <button 
-                @click="toggleMatchedJobs"
-                :class="['source-filter-btn', 'matched', showMatchedOnly ? 'active' : '']"
-                title="Visa endast matchande jobb"
-              >
-                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                </svg>
-                Mina matchningar
-              </button>
-            </div>
-            
-            <!-- Dynamic Filters -->
-            <div v-if="currentFilters.occupationField" class="filter-tag">
-              <span class="filter-text">{{ currentFilters.occupationField }}</span>
-              <button @click="removeFilter('occupationField')" class="filter-remove">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                  <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
-                  <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
-                </svg>
-              </button>
-            </div>
-            
-            <div v-if="currentFilters.municipality" class="filter-tag">
-              <span class="filter-text">{{ currentFilters.municipality }}</span>
-              <button @click="removeFilter('municipality')" class="filter-remove">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                  <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
-                  <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
-                </svg>
-              </button>
-            </div>
-            
-            <div v-if="currentFilters.workTimeExtent" class="filter-tag">
-              <span class="filter-text">{{ currentFilters.workTimeExtent }}</span>
-              <button @click="removeFilter('workTimeExtent')" class="filter-remove">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                  <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
-                  <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
-                </svg>
-              </button>
-            </div>
-            
-            <div v-if="searchTerm" class="filter-tag">
-              <span class="filter-text">"{{ searchTerm }}"</span>
-              <button @click="removeFilter('search')" class="filter-remove">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                  <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
-                  <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
-                </svg>
-              </button>
+              <div v-if="searchTerm" class="filter-tag">
+                <span class="filter-text">"{{ searchTerm }}"</span>
+                <button @click.stop="removeFilter('search')" class="filter-remove">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
+                    <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
         
+        <!-- Right Section: Mina matchningar -->
+        <div :class="['results-bar-section', 'right-section', showMatchedOnly ? 'active' : '']" @click="activateMatchedJobs">
+          <div class="matched-section-content">
+            <button 
+              @click.stop="toggleMatchedJobs"
+              class="matched-tab-btn"
+            >
+              <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              Mina matchningar
+            </button>
+            <span v-if="showMatchedOnly" class="matched-count">{{ allMatchedJobs.length }} matchningar</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sort Controls Bar (only shown when not in Mina matchningar) -->
+      <div v-if="!showMatchedOnly" class="sort-controls-bar">
         <div class="sort-controls">
           <label for="sort-select" class="sort-label">Sortera:</label>
           <select id="sort-select" v-model="sortBy" class="sort-select">
@@ -169,6 +180,68 @@
             <option value="relevance">Relevans</option>
             <option value="deadline">Ansökningsdatum</option>
           </select>
+        </div>
+      </div>
+      
+      <!-- Date Filter Bar (only shown when Mina matchningar is active) -->
+      <div v-if="showMatchedOnly" class="date-filter-bar">
+        <div class="filter-group">
+          <span class="date-filter-label">Datum:</span>
+          <div class="date-filter-buttons">
+            <button 
+              @click="setDateFilter('all')"
+              :class="['date-filter-btn', dateFilter === 'all' ? 'active' : '']"
+            >
+              Alla
+            </button>
+            <button 
+              @click="setDateFilter('6months')"
+              :class="['date-filter-btn', dateFilter === '6months' ? 'active' : '']"
+            >
+              6 månader
+            </button>
+            <button 
+              @click="setDateFilter('1month')"
+              :class="['date-filter-btn', dateFilter === '1month' ? 'active' : '']"
+            >
+              1 månad
+            </button>
+            <button 
+              @click="setDateFilter('1week')"
+              :class="['date-filter-btn', dateFilter === '1week' ? 'active' : '']"
+            >
+              1 vecka
+            </button>
+            <button 
+              @click="setDateFilter('1day')"
+              :class="['date-filter-btn', dateFilter === '1day' ? 'active' : '']"
+            >
+              1 dag
+            </button>
+          </div>
+        </div>
+        
+        <div class="filter-group">
+          <span class="date-filter-label">Plats:</span>
+          <div class="location-filter-input">
+            <input 
+              v-model="matchedJobsLocationFilter"
+              type="text"
+              placeholder="Filtrera på plats..."
+              class="location-input"
+            />
+            <button 
+              v-if="matchedJobsLocationFilter"
+              @click="clearLocationFilter"
+              class="clear-location-btn"
+              title="Rensa platsfilter"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/>
+                <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -448,6 +521,8 @@ const isLoadingMatchedJobs = ref(false)
 const matchedJobsLimit = ref(50)
 const searchTerm = ref('')
 const sortBy = ref('latest')
+const dateFilter = ref<'all' | '6months' | '1month' | '1week' | '1day'>('all')
+const matchedJobsLocationFilter = ref('')
 const currentFilters = ref({
   occupationField: '',
   municipality: '',
@@ -585,7 +660,53 @@ const allMatchedJobs = computed(() => {
     })
   }
   
-  return matched.map(item => item.job)
+  // Apply date filter
+  const matchedJobs = matched.map(item => item.job)
+  
+  if (dateFilter.value === 'all') {
+    return matchedJobs
+  }
+  
+  // Calculate date threshold based on filter
+  const now = new Date()
+  let thresholdDate: Date
+  
+  switch (dateFilter.value) {
+    case '1day':
+      thresholdDate = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+      break
+    case '1week':
+      thresholdDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+      break
+    case '1month':
+      thresholdDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+      break
+    case '6months':
+      thresholdDate = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000)
+      break
+    default:
+      return matchedJobs
+  }
+  
+  // Filter jobs by publication date
+  let filteredJobs = matchedJobs.filter(job => {
+    const jobDate = new Date(job.publicationDate)
+    return jobDate >= thresholdDate
+  })
+  
+  console.log(`📅 Efter datumfilter (${dateFilter.value}): ${filteredJobs.length} av ${matchedJobs.length} jobb`)
+  
+  // Apply location filter if set
+  if (matchedJobsLocationFilter.value.trim()) {
+    const locationQuery = matchedJobsLocationFilter.value.toLowerCase().trim()
+    filteredJobs = filteredJobs.filter(job => {
+      const jobLocation = job.location?.toLowerCase() || ''
+      return jobLocation.includes(locationQuery)
+    })
+    console.log(`📍 Efter platsfilter ("${matchedJobsLocationFilter.value}"): ${filteredJobs.length} jobb`)
+  }
+  
+  return filteredJobs
 })
 
 // Computed property for displaying jobs (with optional match filtering)
@@ -640,12 +761,35 @@ const setSource = (source: 'all' | 'platsbanken' | 'teamtailor') => {
   fetchJobs()
 }
 
+const setDateFilter = (filter: 'all' | '6months' | '1month' | '1week' | '1day') => {
+  dateFilter.value = filter
+}
+
+const clearLocationFilter = () => {
+  matchedJobsLocationFilter.value = ''
+}
+
+const deactivateMatchedJobs = () => {
+  if (showMatchedOnly.value) {
+    showMatchedOnly.value = false
+    dateFilter.value = 'all'
+  }
+}
+
+const activateMatchedJobs = async () => {
+  if (!showMatchedOnly.value) {
+    await toggleMatchedJobs()
+  }
+}
+
 const toggleMatchedJobs = async () => {
   showMatchedOnly.value = !showMatchedOnly.value
   
-  // Reset limit when toggling
+  // Reset limit, date filter, and location filter when toggling
   if (showMatchedOnly.value) {
     matchedJobsLimit.value = 50
+    dateFilter.value = 'all'
+    matchedJobsLocationFilter.value = ''
   }
   
   // When enabling matched jobs, fetch all jobs for matching
@@ -954,17 +1098,136 @@ watch([searchTerm, currentFilters, currentSource], () => {
 
 .results-bar {
   min-height: 50px;
-  width: 100% ;
+  width: 100%;
   border: 1px solid black;
   background-color: #f5f5f5;
-  margin: 0 0 6px 0;
+  margin: 0 0 0 0;
+  display: flex;
+  align-items: stretch;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.results-bar-section {
+  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 12px 16px;
   box-sizing: border-box;
+  transition: background-color 0.3s ease;
+  border-right: 1px solid black;
+  cursor: pointer;
+}
+
+.results-bar-section:last-child {
+  border-right: none;
+}
+
+.results-bar-section.left-section {
+  flex: 3;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
+}
+
+.results-bar-section.right-section {
+  flex: 1;
+  justify-content: center;
+  min-width: 250px;
+}
+
+.results-bar-section.left-section.active {
+  background-color: #116A3E;
+}
+
+.results-bar-section.right-section.active {
+  background-color: #116A3E;
+}
+
+.results-bar-section.active .results-count,
+.results-bar-section.active .sort-label {
+  color: white;
+}
+
+.results-bar-section.active .sort-select {
+  background-color: white;
+  border-color: white;
+  color: #333;
+}
+
+.results-bar-section.active .filter-tag {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #116A3E;
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.results-bar-section.active .filter-remove {
+  color: #116A3E;
+}
+
+.results-bar-section.active .source-filter-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.results-bar-section.active .source-filter-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.results-bar-section.active .source-filter-btn.active {
+  background-color: white;
+  color: #116A3E;
+  border-color: white;
+}
+
+.matched-section-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.matched-tab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.matched-tab-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.results-bar-section.active .matched-tab-btn {
+  color: white;
+  font-size: 16px;
+}
+
+.matched-tab-btn:hover {
+  opacity: 0.8;
+}
+
+.matched-count {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 12px;
 }
 
 .results-info {
@@ -1032,9 +1295,9 @@ watch([searchTerm, currentFilters, currentSource], () => {
 
 .source-filter-btn {
   font-family: 'Inter', sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
-  padding: 6px 14px;
+  padding: 5px 10px;
   border-radius: 6px;
   border: 2px solid transparent;
   background-color: white;
@@ -1043,7 +1306,15 @@ watch([searchTerm, currentFilters, currentSource], () => {
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
+  gap: 4px;
   white-space: nowrap;
+  min-height: 32px;
+}
+
+.source-filter-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 .source-filter-btn:hover {
@@ -1065,15 +1336,6 @@ watch([searchTerm, currentFilters, currentSource], () => {
 .source-filter-btn.teamtailor.active {
   background-color: #8b5cf6;
   border-color: #8b5cf6;
-}
-
-.source-filter-btn.matched.active {
-  background-color: #f59e0b;
-  border-color: #f59e0b;
-}
-
-.source-filter-btn svg {
-  flex-shrink: 0;
 }
 
 .sort-controls {
@@ -1115,6 +1377,144 @@ watch([searchTerm, currentFilters, currentSource], () => {
   outline: none;
   border-color: #1D6453;
   box-shadow: 0 0 0 2px rgba(29, 100, 83, 0.1);
+}
+
+/* Sort Controls Bar */
+.sort-controls-bar {
+  width: 100%;
+  background-color: white;
+  border: 1px solid black;
+  border-top: none;
+  padding: 8px 16px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  margin-bottom: 6px;
+}
+
+.sort-controls-bar .sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Date Filter Bar */
+.date-filter-bar {
+  width: 100%;
+  background-color: white;
+  border: 1px solid black;
+  border-top: none;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  box-sizing: border-box;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.date-filter-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.date-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.location-filter-input {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.location-input {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  padding: 6px 32px 6px 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  background-color: white;
+  color: #333;
+  min-width: 200px;
+  transition: all 0.2s ease;
+}
+
+.location-input:focus {
+  outline: none;
+  border-color: #116A3E;
+  box-shadow: 0 0 0 2px rgba(17, 106, 62, 0.1);
+}
+
+.location-input::placeholder {
+  color: #94a3b8;
+}
+
+.clear-location-btn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.clear-location-btn:hover {
+  background-color: #f1f5f9;
+  color: #334155;
+}
+
+.date-filter-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 2px solid #e2e8f0;
+  background-color: white;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.date-filter-btn:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.date-filter-btn.active {
+  background-color: #116A3E;
+  color: white;
+  border-color: #116A3E;
+  font-weight: 600;
+}
+
+.date-filter-btn.active:hover {
+  background-color: #0f5d36;
+  border-color: #0f5d36;
 }
 
 
@@ -1670,11 +2070,28 @@ watch([searchTerm, currentFilters, currentSource], () => {
   
   .results-bar {
     width: 100%;
-    margin: 0 0 1rem 0;
+    margin: 0 0 0 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .results-bar-section {
+    border-right: none;
+    border-bottom: 1px solid black;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 12px;
     padding: 12px;
+  }
+  
+  .results-bar-section:last-child {
+    border-bottom: none;
+  }
+  
+  .results-bar-section.left-section,
+  .results-bar-section.right-section {
+    flex: 1;
+    min-width: auto;
   }
   
   .results-info {
@@ -1692,6 +2109,59 @@ watch([searchTerm, currentFilters, currentSource], () => {
   
   .active-filters {
     max-width: 100%;
+  }
+  
+  .sort-controls-bar {
+    padding: 8px 12px;
+    margin-bottom: 1rem;
+  }
+  
+  .sort-controls-bar .sort-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .date-filter-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 1rem;
+  }
+  
+  .filter-group {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .date-filter-buttons {
+    width: 100%;
+  }
+  
+  .date-filter-btn {
+    flex: 1;
+    min-width: calc(50% - 4px);
+  }
+  
+  .location-input {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .matched-section-content {
+    width: 100%;
+    align-items: flex-start;
+  }
+  
+  .source-filter-btn {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  
+  .source-filter-btn svg {
+    width: 12px;
+    height: 12px;
   }
   
   .main-content {
