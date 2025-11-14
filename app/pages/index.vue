@@ -64,7 +64,7 @@
       />
 
       <!-- Results Bar -->
-      <div class="results-bar">
+      <div class="results-bar" :class="showMatchedOnly ? 'right-active' : 'left-active'">
         <!-- Left Section: Platsbanken/Teamtailor -->
         <div :class="['results-bar-section', 'left-section', !showMatchedOnly ? 'active' : '']" @click="deactivateMatchedJobs">
           <div class="results-info">
@@ -1100,12 +1100,45 @@ watch([searchTerm, currentFilters, currentSource], () => {
   min-height: 50px;
   width: 100%;
   border: 1px solid black;
-  background-color: #f5f5f5;
+  background-color: white;
   margin: 0 0 0 0;
   display: flex;
   align-items: stretch;
   box-sizing: border-box;
   overflow: hidden;
+  position: relative;
+}
+
+/* Diagonal background - blends green and white */
+.results-bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: background 0.3s ease;
+  z-index: 1;
+}
+
+/* Left side active - diagonal white from left, green on right */
+.results-bar.left-active::before {
+  background: linear-gradient(
+    45deg,
+    white 0%,
+    white 70%,
+    #1D6453 30%,
+    #1D6453 100%
+  );
+}
+
+/* Right side active - diagonal green on left, white from right */
+.results-bar.right-active::before {
+  background: linear-gradient(
+    135deg,
+    #1D6453 0%,
+    #1D6453 70%,
+    white 30%,
+    white 100%
+  );
 }
 
 .results-bar-section {
@@ -1114,13 +1147,11 @@ watch([searchTerm, currentFilters, currentSource], () => {
   align-items: center;
   padding: 12px 16px;
   box-sizing: border-box;
-  transition: background-color 0.3s ease;
-  border-right: 1px solid black;
+  transition: all 0.3s ease;
   cursor: pointer;
-}
-
-.results-bar-section:last-child {
-  border-right: none;
+  position: relative;
+  background-color: transparent;
+  z-index: 2;
 }
 
 .results-bar-section.left-section {
@@ -1136,49 +1167,86 @@ watch([searchTerm, currentFilters, currentSource], () => {
   min-width: 250px;
 }
 
-.results-bar-section.left-section.active {
-  background-color: #116A3E;
-}
-
-.results-bar-section.right-section.active {
-  background-color: #116A3E;
-}
-
+/* Active section - dark text on white background */
 .results-bar-section.active .results-count,
 .results-bar-section.active .sort-label {
+  color: #333;
+}
+
+.results-bar-section.active .matched-tab-btn {
+  color: #333;
+}
+
+/* Inactive section on green background - white text */
+.results-bar.left-active .right-section .matched-tab-btn,
+.results-bar.right-active .left-section .results-count,
+.results-bar.right-active .left-section .sort-label {
   color: white;
 }
 
 .results-bar-section.active .sort-select {
   background-color: white;
-  border-color: white;
+  border-color: #333;
   color: #333;
 }
 
 .results-bar-section.active .filter-tag {
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #116A3E;
-  border-color: rgba(255, 255, 255, 0.9);
+  background-color: #1D6453;
+  color: white;
+  border-color: #1D6453;
 }
 
 .results-bar-section.active .filter-remove {
-  color: #116A3E;
+  color: white;
 }
 
 .results-bar-section.active .source-filter-btn {
+  background-color: rgba(29, 100, 83, 0.2);
+  color: #333;
+  border-color: rgba(29, 100, 83, 0.3);
+}
+
+.results-bar-section.active .source-filter-btn:hover {
+  background-color: rgba(29, 100, 83, 0.3);
+}
+
+.results-bar-section.active .source-filter-btn.active {
+  background-color: #1D6453;
+  color: white;
+  border-color: #1D6453;
+}
+
+/* Inactive section source filter buttons on green background */
+.results-bar.right-active .left-section .source-filter-btn {
   background-color: rgba(255, 255, 255, 0.2);
   color: white;
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-.results-bar-section.active .source-filter-btn:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+.results-bar.right-active .left-section .source-filter-btn.active {
+  background-color: white;
+  color: #1D6453;
+  border-color: white;
 }
 
-.results-bar-section.active .source-filter-btn.active {
-  background-color: white;
-  color: #116A3E;
-  border-color: white;
+.results-bar.right-active .left-section .filter-tag {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #1D6453;
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.results-bar.right-active .left-section .filter-remove {
+  color: #1D6453;
+}
+
+.results-bar.left-active .right-section .matched-count {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.results-bar.right-active .right-section .matched-count {
+  color: #333;
+  background-color: rgba(29, 100, 83, 0.15);
 }
 
 .matched-section-content {
@@ -1200,7 +1268,7 @@ watch([searchTerm, currentFilters, currentSource], () => {
   font-family: 'Inter', sans-serif;
   font-size: 15px;
   font-weight: 600;
-  color: #64748b;
+  color: #333;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -1211,11 +1279,6 @@ watch([searchTerm, currentFilters, currentSource], () => {
   flex-shrink: 0;
 }
 
-.results-bar-section.active .matched-tab-btn {
-  color: white;
-  font-size: 16px;
-}
-
 .matched-tab-btn:hover {
   opacity: 0.8;
 }
@@ -1224,8 +1287,8 @@ watch([searchTerm, currentFilters, currentSource], () => {
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 500;
-  color: white;
-  background-color: rgba(255, 255, 255, 0.2);
+  color: #333;
+  background-color: rgba(29, 100, 83, 0.15);
   padding: 4px 12px;
   border-radius: 12px;
 }
@@ -2073,6 +2136,10 @@ watch([searchTerm, currentFilters, currentSource], () => {
     margin: 0 0 0 0;
     flex-direction: column;
     align-items: stretch;
+  }
+  
+  .results-bar::before {
+    display: none;
   }
   
   .results-bar-section {
