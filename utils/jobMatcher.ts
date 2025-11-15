@@ -188,14 +188,17 @@ export function getMatchedJobs(jobs: SimpleJob[], profile: Profile, minScore = 1
  * Get match score category for display
  */
 export function getMatchCategory(score: number): { label: string; color: string; percentage: number } {
+  // Percentage is simply the score capped at 100
+  const percentage = Math.min(100, score)
+  
   if (score >= 50) {
-    return { label: 'Utmärkt match', color: '#1D6453', percentage: Math.min(100, (score / 80) * 100) }
+    return { label: 'Utmärkt match', color: '#1D6453', percentage }
   } else if (score >= 30) {
-    return { label: 'Bra match', color: '#059669', percentage: Math.min(100, (score / 50) * 100) }
+    return { label: 'Bra match', color: '#059669', percentage }
   } else if (score >= 15) {
-    return { label: 'Okej match', color: '#D97706', percentage: Math.min(100, (score / 30) * 100) }
+    return { label: 'Okej match', color: '#D97706', percentage }
   } else if (score >= 5) {
-    return { label: 'Svag match', color: '#DC2626', percentage: Math.min(100, (score / 15) * 100) }
+    return { label: 'Svag match', color: '#DC2626', percentage }
   } else {
     return { label: 'Ingen match', color: '#6B7280', percentage: 0 }
   }

@@ -68,7 +68,7 @@
         <!-- Left Section: Platsbanken/Teamtailor -->
         <div :class="['results-bar-section', 'left-section', !showMatchedOnly ? 'active' : '']" @click="deactivateMatchedJobs">
           <div class="results-info">
-            <span class="results-count">Hittade {{ totalJobs }} jobb</span>
+            <span class="results-count">Visar {{ jobs.length }} av {{ totalJobs }} jobb</span>
             
             <!-- Active Filters -->
             <div class="active-filters">
@@ -647,15 +647,26 @@ const allMatchedJobs = computed(() => {
       match: calculateJobMatch(job, profile.value)
     }))
     .filter(item => item.match.matchScore > 0)
-    .sort((a, b) => b.match.matchScore - a.match.matchScore)
+    .sort((a, b) => {
+      // First sort by match score (highest first)
+      if (b.match.matchScore !== a.match.matchScore) {
+        return b.match.matchScore - a.match.matchScore
+      }
+      // If match scores are equal, sort by publication date (newest first)
+      const dateA = new Date(a.job.publicationDate).getTime()
+      const dateB = new Date(b.job.publicationDate).getTime()
+      return dateB - dateA
+    })
   
   console.log(`✅ Hittade ${matched.length} matchande jobb`)
   
-  // Show top 10 matches for debugging
+  // Show top 15 matches for debugging with dates
   if (matched.length > 0) {
-    console.log('🏆 Top 10 matchningar:')
-    matched.slice(0, 10).forEach((item, i) => {
-      console.log(`  ${i + 1}. "${item.job.title}" - ${item.job.company} (${item.match.matchScore} poäng)`)
+    console.log('🏆 Top 15 matchningar (sorterade efter procent, sedan datum):')
+    matched.slice(0, 15).forEach((item, i) => {
+      const jobDate = new Date(item.job.publicationDate).toLocaleDateString('sv-SE')
+      console.log(`  ${i + 1}. "${item.job.title}" - ${item.job.company}`)
+      console.log(`     ${item.match.matchScore} poäng | Publicerad: ${jobDate}`)
       console.log(`     Anledningar: ${item.match.matchReasons.join(', ')}`)
     })
   }
@@ -1069,7 +1080,7 @@ watch([searchTerm, currentFilters, currentSource], () => {
 }
 
 .main-content {
-  width: 1058px;
+  width: 1200px;
   flex-shrink: 0;
 }
 
@@ -1120,24 +1131,24 @@ watch([searchTerm, currentFilters, currentSource], () => {
   z-index: 1;
 }
 
-/* Left side active - diagonal green from left, white on right */
+/* Left side active - diagonal green from left, light green on right */
 .results-bar.left-active::before {
   background: linear-gradient(
-    135deg,
+    45deg,
     #1D6453 0%,
-    #1D6453 70%,
-    white 30%,
-    white 100%
+    #1D6453 75%,
+    #e8f5f0 25%,
+    #e8f5f0 100%
   );
 }
 
-/* Right side active - diagonal white on left, green from right */
+/* Right side active - diagonal light green on left, green from right */
 .results-bar.right-active::before {
   background: linear-gradient(
     135deg,
-    white 0%,
-    white 70%,
-    #1D6453 30%,
+    #e8f5f0 0%,
+    #e8f5f0 75%,
+    #1D6453 25%,
     #1D6453 100%
   );
 }
